@@ -459,6 +459,12 @@ const SUPABASE_URL = 'https://wpwlbulloksrspbpclmt.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_fXJKvM-vxOvXb-yFntMXdw_JU0DCjKJ';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+// Email whitelist — only these emails can log in
+const EMAIL_WHITELIST = [
+  'raylan@example.com',  // Raylan 的实际邮箱
+  'carol@example.com',   // 咪大王的实际邮箱
+];
+
 const STORAGE_KEY = 'learning_tracker_v5';
 const TARGET = 30;
 const GRID_SIZE = 60;
@@ -505,6 +511,10 @@ document.getElementById('authSendBtn').addEventListener('click', async () => {
   const errEl = document.getElementById('authError');
   if (!email || !email.includes('@')) {
     errEl.textContent = '请输入有效的邮箱地址';
+    return;
+  }
+  if (!EMAIL_WHITELIST.includes(email)) {
+    errEl.textContent = '该邮箱未授权，请联系管理员';
     return;
   }
   errEl.textContent = '';

@@ -9,7 +9,6 @@ redirects = []
 [build]
 publish = "/home/raylan/.openclaw/workspace/projects/learning-tracker-pwa"
 publishOrigin = "default"
-base = "/home/raylan/.openclaw/workspace/projects/learning-tracker-pwa"
 
 [build.environment]
 
