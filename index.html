@@ -502,8 +502,6 @@ async function apiLoadData(userId) {
 }
 
 async function apiSaveData(userId, payload) {
-  console.log('apiSaveData called, userId:', userId, 'token exists:', !!sessionToken);
-  
   const res = await fetch(API + '/learning_tracker_data', {
     method: 'POST',
     headers: {
@@ -515,14 +513,14 @@ async function apiSaveData(userId, payload) {
     body: JSON.stringify({ user_id: userId, ...payload })
   });
   
-  console.log('apiSaveData response status:', res.status);
-  
   if (!res.ok) {
     const errText = await res.text();
-    console.error('apiSaveData error:', errText);
     throw new Error('Save failed: ' + errText);
   }
-  return await res.json();
+  
+  // Supabase returns empty body on upsert update, skip json parse
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
 
 // User accounts — hardcoded credentials
