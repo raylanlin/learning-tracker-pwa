@@ -492,28 +492,45 @@ async function apiLogin(email, password) {
   return data;
 }
 
+let cloudRowId = null;  // Track existing row id for PATCH updates
+
 async function apiLoadData(userId) {
   const res = await fetch(API + '/learning_tracker_data?user_id=eq.' + userId + '&limit=1', {
     headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + sessionToken }
   });
   if (!res.ok) throw new Error('Load failed');
   const data = await res.json();
-  return data[0] || null;
+  const row = data[0] || null;
+  if (row) cloudRowId = row.id;  // Remember the row id for PATCH
+  return row;
 }
 
 async function apiSaveData(userId, payload) {
-  const res = await fetch(API + '/learning_tracker_data', {
-    method: 'POST',
+  const url = cloudRowId
+    ? API + '/learning_tracker_data?id=eq.' + cloudRowId
+    : API + '/learning_tracker_data';
+  const method = cloudRowId ? 'PATCH' : 'POST';
+  const body = cloudRowId ? payload : { user_id: userId, ...payload };
+  
+  const res = await fetch(url, {
+    method,
     headers: {
       'Content-Type': 'application/json',
       apikey: SUPABASE_ANON,
-      Authorization: 'Bearer ' + sessionToken,
-      Prefer: 'resolution=merge-duplicates'
+      Authorization: 'Bearer ' + sessionToken
     },
-    body: JSON.stringify({ user_id: userId, ...payload })
+    body: JSON.stringify(body)
   });
-  if (!res.ok) throw new Error('Save failed');
-  return await res.json();
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error('Save failed: ' + errText);
+  }
+  const result = await res.json();
+  // If this was the first POST and returned an id, remember it
+  if (!cloudRowId && result && result.length > 0 && result[0].id) {
+    cloudRowId = result[0].id;
+  }
+  return result;
 }
 
 // User accounts — hardcoded credentials
