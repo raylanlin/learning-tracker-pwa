@@ -39,8 +39,11 @@
 
     /* ── Auth Screen ── */
     .auth-screen {
+      position: fixed; inset: 0; z-index: 500;
       display: flex; flex-direction: column; align-items: center;
-      justify-content: center; min-height: 100vh; padding: 32px 24px;
+      justify-content: center; padding: 32px 24px;
+      background: var(--bg);
+      overflow: hidden;
     }
     .auth-card {
       background: var(--card); border-radius: 24px; padding: 40px 28px 28px;
@@ -457,7 +460,16 @@
 // ── Supabase Setup ──
 const SUPABASE_URL = 'https://wpwlbulloksrspbpclmt.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_fXJKvM-vxOvXb-yFntMXdw_JU0DCjKJ';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let supabase;
+
+// Check if Supabase SDK loaded
+if (!window.supabase) {
+  console.error('Supabase SDK not loaded!');
+  document.getElementById('authError').textContent = 'SDK 加载失败，请刷新重试';
+} else {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  console.log('Supabase client initialized');
+}
 
 // Email whitelist — only these emails can log in
 const EMAIL_WHITELIST = [
@@ -509,6 +521,12 @@ function showApp() {
 document.getElementById('authSendBtn').addEventListener('click', async () => {
   const email = document.getElementById('authEmail').value.trim();
   const errEl = document.getElementById('authError');
+  const btn = document.getElementById('authSendBtn');
+  
+  if (!supabase) {
+    errEl.textContent = 'Supabase 未初始化，请刷新页面';
+    return;
+  }
   if (!email || !email.includes('@')) {
     errEl.textContent = '请输入有效的邮箱地址';
     return;
@@ -517,20 +535,29 @@ document.getElementById('authSendBtn').addEventListener('click', async () => {
     errEl.textContent = '该邮箱未授权，请联系管理员';
     return;
   }
+  
   errEl.textContent = '';
-  const btn = document.getElementById('authSendBtn');
   btn.textContent = '发送中…';
   btn.disabled = true;
 
-  const { error } = await supabase.auth.signInWithOtp({ email });
-  if (error) {
-    errEl.textContent = error.message;
+  try {
+    console.log('Sending OTP to:', email);
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    console.log('OTP response:', error ? 'error' : 'success');
+    if (error) {
+      errEl.textContent = error.message;
+      btn.textContent = '发送登录链接';
+      btn.disabled = false;
+    } else {
+      errEl.textContent = '✅ 邮件已发送，点击链接即可登录';
+      btn.textContent = '已发送';
+      document.getElementById('authHint').textContent = `链接已发往 ${email}`;
+    }
+  } catch (e) {
+    console.error('OTP call failed:', e);
+    errEl.textContent = '发送失败: ' + e.message;
     btn.textContent = '发送登录链接';
     btn.disabled = false;
-  } else {
-    errEl.textContent = '✅ 邮件已发送，点击链接即可登录';
-    btn.textContent = '已发送';
-    document.getElementById('authHint').textContent = `链接已发往 ${email}`;
   }
 });
 
@@ -554,22 +581,16 @@ async function loadFromCloud() {
   try {
     const { data, error } = await supabase
       .from('learning_tracker_data')
-      .select('*')
-      .eq('user_id', user.id);
+      .select('tasks, sessions, calendar_tasks')
+      .eq('user_id', user.id)
+      .single();
 
-    if (error) throw error;
+    if (error && error.code !== 'PGRST116') throw error;
 
-    // Merge cloud data with local cache
-    let cloudData = {};
-    (data || []).forEach(row => {
-      cloudData[row.key] = row.value;
-    });
-
-    // Priority: cloud > local cache
-    if (cloudData.tasks) {
-      tasks = cloudData.tasks;
-      sessions = cloudData.sessions || {};
-      calendarTasks = cloudData.calendar_tasks || {};
+    if (data && data.tasks) {
+      tasks = data.tasks;
+      sessions = data.sessions || {};
+      calendarTasks = data.calendar_tasks || {};
     } else {
       // No cloud data, try local cache (v4)
       try {
@@ -578,7 +599,7 @@ async function loadFromCloud() {
           const local = JSON.parse(localRaw);
           tasks = local.tasks || [];
           sessions = local.sessions || {};
-          localSaveTimeout = setTimeout(saveToCloud, 3000);  // Push local data to cloud
+          localSaveTimeout = setTimeout(saveToCloud, 3000);
         }
       } catch { /* ignore */ }
     }
@@ -606,18 +627,12 @@ async function saveToCloud() {
   localChanges = false;
 
   try {
-    const payload = {
+    await supabase.from('learning_tracker_data').upsert({
+      user_id: user.id,
       tasks,
       sessions,
       calendar_tasks: calendarTasks
-    };
-
-    // Upsert main data
-    await supabase.from('learning_tracker_data').upsert({
-      user_id: user.id,
-      key: 'main',
-      value: payload
-    }, { onConflict: 'user_id,key' });
+    }, { onConflict: 'user_id' });
 
     setSyncStatus('online', '● 已同步');
   } catch (e) {
