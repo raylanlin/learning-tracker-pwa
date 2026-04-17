@@ -7,7 +7,7 @@
   <title>学习追踪器</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Supabase SDK removed — using direct REST API calls instead -->
   <style>
     :root {
       --bg: #f2f2f7;
@@ -458,18 +458,62 @@
 </div>
 
 <script>
-// ── Supabase Setup ──
+// ── Supabase Setup (direct REST API, no external SDK) ──
 const SUPABASE_URL = 'https://wpwlbulloksrspbpclmt.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_fXJKvM-vxOvXb-yFntMXdw_JU0DCjKJ';
-let supabase;
+const API = SUPABASE_URL + '/rest/v1';
+const AUTH = SUPABASE_URL + '/auth/v1';
 
-// Check if Supabase SDK loaded
-if (!window.supabase) {
-  console.error('Supabase SDK not loaded!');
-  document.getElementById('authError').textContent = 'SDK 加载失败，请刷新重试';
-} else {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  console.log('Supabase client initialized');
+let sessionToken = null;
+let sessionUser = null;
+
+// Restore session from localStorage
+try {
+  const saved = localStorage.getItem('lt_session');
+  if (saved) {
+    const s = JSON.parse(saved);
+    if (s.expires_at && s.expires_at > Date.now()) {
+      sessionToken = s.access_token;
+      sessionUser = s.user;
+    } else {
+      localStorage.removeItem('lt_session');
+    }
+  }
+} catch { /* ignore */ }
+
+async function apiLogin(email, password) {
+  const res = await fetch(AUTH + '/token?grant_type=password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON },
+    body: JSON.stringify({ email, password })
+  });
+  if (!res.ok) throw new Error('Login failed');
+  const data = await res.json();
+  return data;
+}
+
+async function apiLoadData(userId) {
+  const res = await fetch(API + '/learning_tracker_data?user_id=eq.' + userId + '&limit=1', {
+    headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + sessionToken }
+  });
+  if (!res.ok) throw new Error('Load failed');
+  const data = await res.json();
+  return data[0] || null;
+}
+
+async function apiSaveData(userId, payload) {
+  const res = await fetch(API + '/learning_tracker_data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_ANON,
+      Authorization: 'Bearer ' + sessionToken,
+      Prefer: 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify({ user_id: userId, ...payload })
+  });
+  if (!res.ok) throw new Error('Save failed');
+  return await res.json();
 }
 
 // User accounts — hardcoded credentials
@@ -482,7 +526,7 @@ const STORAGE_KEY = 'learning_tracker_v5';
 const TARGET = 30;
 const GRID_SIZE = 60;
 
-let user = null;  // Supabase user
+let user = null;
 let tasks = [];
 let sessions = {};
 let calendarTasks = {};
@@ -498,9 +542,8 @@ let localChanges = false;
 
 // ── Auth ──
 async function checkSession() {
-  const { data } = await supabase.auth.getSession();
-  if (data?.session) {
-    user = data.session.user;
+  if (sessionToken && sessionUser) {
+    user = sessionUser;
     showApp();
     await loadFromCloud();
     initApp();
@@ -525,10 +568,6 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
   const errEl = document.getElementById('authError');
   const btn = document.getElementById('authLoginBtn');
   
-  if (!supabase) {
-    errEl.textContent = 'Supabase 未初始化，请刷新页面';
-    return;
-  }
   if (!username || !password) {
     errEl.textContent = '请输入账号和密码';
     return;
@@ -545,43 +584,27 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
   btn.disabled = true;
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: account.email,
-      password: password
-    });
-    if (error) {
-      errEl.textContent = '密码错误';
-      btn.textContent = '登录';
-      btn.disabled = false;
-    } else {
-      user = data.user;
-      showApp();
-      loadFromCloud().then(() => initApp());
-    }
+    const data = await apiLogin(account.email, password);
+    sessionToken = data.access_token;
+    sessionUser = data.user;
+    user = data.user;
+    localStorage.setItem('lt_session', JSON.stringify({
+      access_token: data.access_token,
+      user: data.user,
+      expires_at: Date.now() + data.expires_in * 1000
+    }));
+    showApp();
+    loadFromCloud().then(() => initApp());
   } catch (e) {
     console.error('Login failed:', e);
-    errEl.textContent = '登录失败，请重试';
+    errEl.textContent = '密码错误';
     btn.textContent = '登录';
     btn.disabled = false;
   }
 });
 
-// Allow Enter key to submit
 document.getElementById('authPass').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('authLoginBtn').click();
-});
-
-supabase.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN' && session?.user) {
-    user = session.user;
-    showApp();
-    loadFromCloud().then(() => {
-      initApp();
-    });
-  } else if (event === 'SIGNED_OUT') {
-    user = null;
-    showAuth();
-  }
 });
 
 // ── Cloud Sync ──
@@ -589,20 +612,12 @@ async function loadFromCloud() {
   if (!user) return;
   showLoading('从云端加载数据…');
   try {
-    const { data, error } = await supabase
-      .from('learning_tracker_data')
-      .select('tasks, sessions, calendar_tasks')
-      .eq('user_id', user.id)
-      .single();
-
-    if (error && error.code !== 'PGRST116') throw error;
-
-    if (data && data.tasks) {
-      tasks = data.tasks;
-      sessions = data.sessions || {};
-      calendarTasks = data.calendar_tasks || {};
+    const row = await apiLoadData(user.id);
+    if (row && row.tasks) {
+      tasks = row.tasks;
+      sessions = row.sessions || {};
+      calendarTasks = row.calendar_tasks || {};
     } else {
-      // No cloud data, try local cache (v4)
       try {
         const localRaw = localStorage.getItem('learning_tracker_v4');
         if (localRaw) {
@@ -613,12 +628,10 @@ async function loadFromCloud() {
         }
       } catch { /* ignore */ }
     }
-
     hideLoading();
   } catch (e) {
     console.error('Cloud load failed:', e);
     hideLoading();
-    // Fallback to localStorage
     try {
       const localRaw = localStorage.getItem(STORAGE_KEY);
       if (localRaw) {
@@ -637,13 +650,7 @@ async function saveToCloud() {
   localChanges = false;
 
   try {
-    await supabase.from('learning_tracker_data').upsert({
-      user_id: user.id,
-      tasks,
-      sessions,
-      calendar_tasks: calendarTasks
-    }, { onConflict: 'user_id' });
-
+    await apiSaveData(user.id, { tasks, sessions, calendar_tasks: calendarTasks });
     setSyncStatus('online', '● 已同步');
   } catch (e) {
     console.error('Cloud save failed:', e);
