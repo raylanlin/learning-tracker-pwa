@@ -523,10 +523,10 @@ async function apiSaveData(userId, payload) {
   return text ? JSON.parse(text) : {};
 }
 
-// User accounts — hardcoded credentials
+// User accounts — email only, no passwords in source code
 const USER_ACCOUNTS = {
-  'raylan': { email: 'raylan@learningtracker.app', password: 'Raylan1234', name: 'Raylan' },
-  'scarlett': { email: 'scarlett@learningtracker.app', password: 'Scarlett1234', name: 'Scarlett' },
+  'raylan': { email: 'raylan@learningtracker.app', name: 'Raylan' },
+  'scarlett': { email: 'scarlett@learningtracker.app', name: 'Scarlett' },
 };
 
 const STORAGE_KEY = 'learning_tracker_v5';
