@@ -502,7 +502,8 @@ async function apiLoadData(userId) {
 }
 
 async function apiSaveData(userId, payload) {
-  // user_id is primary key, so upsert always works
+  console.log('apiSaveData called, userId:', userId, 'token exists:', !!sessionToken);
+  
   const res = await fetch(API + '/learning_tracker_data', {
     method: 'POST',
     headers: {
@@ -513,8 +514,12 @@ async function apiSaveData(userId, payload) {
     },
     body: JSON.stringify({ user_id: userId, ...payload })
   });
+  
+  console.log('apiSaveData response status:', res.status);
+  
   if (!res.ok) {
     const errText = await res.text();
+    console.error('apiSaveData error:', errText);
     throw new Error('Save failed: ' + errText);
   }
   return await res.json();
