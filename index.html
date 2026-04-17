@@ -385,10 +385,11 @@
 <div id="authScreen" class="auth-screen">
   <div class="auth-card">
     <h1>学习追踪</h1>
-    <p>输入邮箱，收到链接后点击即可登录</p>
+    <p>输入账号密码登录</p>
     <div class="auth-error" id="authError"></div>
-    <input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email" />
-    <button class="auth-btn" id="authSendBtn">发送登录链接</button>
+    <input type="text" id="authUser" placeholder="账号" autocomplete="username" />
+    <input type="password" id="authPass" placeholder="密码" autocomplete="current-password" />
+    <button class="auth-btn" id="authLoginBtn">登录</button>
     <div class="auth-hint" id="authHint">数据将安全保存在云端 ☁️</div>
   </div>
 </div>
@@ -471,11 +472,11 @@ if (!window.supabase) {
   console.log('Supabase client initialized');
 }
 
-// Email whitelist — only these emails can log in
-const EMAIL_WHITELIST = [
-  'linrion101@gmail.com',  // Raylan
-  // 咪大王的邮箱待补充
-];
+// User accounts — hardcoded credentials
+const USER_ACCOUNTS = {
+  'raylan': { email: 'raylan@learningtracker.app', password: 'Raylan1234', name: 'Raylan' },
+  'carol': { email: 'carol@learningtracker.app', password: 'Carol1234', name: 'Carol' },
+};
 
 const STORAGE_KEY = 'learning_tracker_v5';
 const TARGET = 30;
@@ -518,47 +519,56 @@ function showApp() {
   document.getElementById('mainApp').style.display = 'block';
 }
 
-document.getElementById('authSendBtn').addEventListener('click', async () => {
-  const email = document.getElementById('authEmail').value.trim();
+document.getElementById('authLoginBtn').addEventListener('click', async () => {
+  const username = document.getElementById('authUser').value.trim().toLowerCase();
+  const password = document.getElementById('authPass').value;
   const errEl = document.getElementById('authError');
-  const btn = document.getElementById('authSendBtn');
+  const btn = document.getElementById('authLoginBtn');
   
   if (!supabase) {
     errEl.textContent = 'Supabase 未初始化，请刷新页面';
     return;
   }
-  if (!email || !email.includes('@')) {
-    errEl.textContent = '请输入有效的邮箱地址';
+  if (!username || !password) {
+    errEl.textContent = '请输入账号和密码';
     return;
   }
-  if (!EMAIL_WHITELIST.includes(email)) {
-    errEl.textContent = '该邮箱未授权，请联系管理员';
+  
+  const account = USER_ACCOUNTS[username];
+  if (!account) {
+    errEl.textContent = '账号不存在';
     return;
   }
   
   errEl.textContent = '';
-  btn.textContent = '发送中…';
+  btn.textContent = '登录中…';
   btn.disabled = true;
 
   try {
-    console.log('Sending OTP to:', email);
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    console.log('OTP response:', error ? 'error' : 'success');
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: account.email,
+      password: password
+    });
     if (error) {
-      errEl.textContent = error.message;
-      btn.textContent = '发送登录链接';
+      errEl.textContent = '密码错误';
+      btn.textContent = '登录';
       btn.disabled = false;
     } else {
-      errEl.textContent = '✅ 邮件已发送，点击链接即可登录';
-      btn.textContent = '已发送';
-      document.getElementById('authHint').textContent = `链接已发往 ${email}`;
+      user = data.user;
+      showApp();
+      loadFromCloud().then(() => initApp());
     }
   } catch (e) {
-    console.error('OTP call failed:', e);
-    errEl.textContent = '发送失败: ' + e.message;
-    btn.textContent = '发送登录链接';
+    console.error('Login failed:', e);
+    errEl.textContent = '登录失败，请重试';
+    btn.textContent = '登录';
     btn.disabled = false;
   }
+});
+
+// Allow Enter key to submit
+document.getElementById('authPass').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('authLoginBtn').click();
 });
 
 supabase.auth.onAuthStateChange((event, session) => {
