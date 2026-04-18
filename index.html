@@ -2420,7 +2420,6 @@ function bindEvents() {
       haptic();
     });
   });
-  document.addEventListener('click', () => themeMenu.classList.remove('show'));
   // React to system changes if in auto mode
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
     if ((localStorage.getItem('lt_theme') || 'auto') === 'auto') applyThemeUI();
@@ -2437,12 +2436,27 @@ function bindEvents() {
   const displayName = nameMap[username] || username;
   userBadgeInitial.textContent = displayName.charAt(0).toUpperCase();
   userMenuName.textContent = displayName;
+
   userBtn.addEventListener('click', e => {
     e.stopPropagation();
+    const isOpen = userMenu.classList.contains('show');
     userMenu.classList.toggle('show');
     themeMenu.classList.remove('show');
   });
-  document.addEventListener('click', () => userMenu.classList.remove('show'));
+
+  // Stop propagation for all items inside menus so document handler doesn't close them
+  userMenu.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', e => e.stopPropagation());
+  });
+  themeMenu.querySelectorAll('.theme-opt').forEach(item => {
+    item.addEventListener('click', e => e.stopPropagation());
+  });
+
+  // Click-outside handler — only closes menus when clicking truly outside
+  document.addEventListener('click', e => {
+    if (!userMenu.contains(e.target) && e.target !== userBtn) userMenu.classList.remove('show');
+    if (!themeMenu.contains(e.target) && e.target !== themeBtn) themeMenu.classList.remove('show');
+  });
 
   // Export / Import
   document.getElementById('exportBtn').addEventListener('click', () => {
@@ -2454,10 +2468,16 @@ function bindEvents() {
     userMenu.classList.remove('show');
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    if (!confirm('确定退出登录?')) return;
-    localStorage.removeItem('lt_session');
-    location.reload();
+  document.getElementById('logoutBtn').addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    userMenu.classList.remove('show');
+    setTimeout(() => {
+      if (confirm('确定退出登录?')) {
+        localStorage.removeItem('lt_session');
+        location.reload();
+      }
+    }, 150);
   });
 
   updateFabText();
