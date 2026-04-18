@@ -592,6 +592,24 @@
       padding: 2px 8px; border-radius: var(--r-pill);
       background: var(--bg-elev);
     }
+
+    /* ── Backup Bar ── */
+    .backup-bar {
+      display: flex; gap: 8px; padding: 10px 16px;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+    }
+    .backup-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--card); color: var(--text-secondary);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .backup-btn:active { opacity: 0.7; transform: scale(0.96); }
+    .backup-btn.export { color: var(--accent); border-color: var(--accent); }
+    .backup-btn.import { color: var(--green); border-color: var(--green); }
+    .backup-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
     .calendar-task-list {
       border-top: 1px solid var(--border);
     }
@@ -1598,6 +1616,16 @@ function renderCalendarTasks() {
 
   let html = `
     <div class="day-detail">
+      <div class="backup-bar">
+        <button class="backup-btn export" id="exportBtn">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导出
+        </button>
+        <button class="backup-btn import" id="importBtn">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 10V2M5 5l3-3 3 3M3 13h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导入
+        </button>
+      </div>
       <div class="day-detail-header">
         <span class="date-label">${formatDateCN(selectedDate)}</span>
         ${total > 0 ? `<span class="date-count">${doneCount}/${total}</span>` : ''}
@@ -1631,6 +1659,11 @@ function renderCalendarTasks() {
   container.innerHTML = html;
 
   document.getElementById('addCalTaskBtn').addEventListener('click', () => openCalendarTaskModal());
+
+  // Export / Import buttons
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+  document.getElementById('importBtn').addEventListener('click', () => importFileInput.click());
+
   container.querySelectorAll('[data-ct-check]').forEach(el => {
     el.addEventListener('change', () => {
       const [d, i] = el.dataset.ctCheck.split('|');
@@ -2349,7 +2382,7 @@ function bindEvents() {
     document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.remove());
     const meta = document.createElement('meta');
     meta.name = 'theme-color';
-    meta.content = isDark ? '#15151a' : '#f7f7f9';
+    meta.content = isDark ? '#15151a' : '#fafafc';
     document.head.appendChild(meta);
   };
   applyThemeUI();
@@ -2388,6 +2421,7 @@ function bindEvents() {
     themeMenu.classList.remove('show');
   });
   document.addEventListener('click', () => userMenu.classList.remove('show'));
+
   document.getElementById('logoutBtn').addEventListener('click', () => {
     if (!confirm('确定退出登录?')) return;
     localStorage.removeItem('lt_session');
@@ -2407,6 +2441,80 @@ function updateFabText() {
   }
   fabGroup.style.display = '';
   label.textContent = activeTab === 'calendar' ? '添加计划' : '添加任务';
+}
+
+// ── Export / Import ──
+const importFileInput = document.createElement('input');
+importFileInput.type = 'file';
+importFileInput.id = 'importFileInput';
+importFileInput.accept = '.json';
+importFileInput.style.display = 'none';
+document.body.appendChild(importFileInput);
+importFileInput.addEventListener('change', importData);
+
+function exportData() {
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const filename = `learning-tracker-backup-${dateStr}.json`;
+  const payload = { tasks, sessions, calendarTasks };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  setSyncStatus('online', '已导出');
+  setTimeout(() => setSyncStatus('online', '已同步'), 2000);
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data.tasks)) {
+        alert('文件格式不对');
+        return;
+      }
+      // Merge tasks: deduplicate by id
+      const existingIds = new Set(tasks.map(t => t.id));
+      (data.tasks || []).forEach(t => { if (!existingIds.has(t.id)) tasks.push(t); });
+      // Deep merge sessions
+      for (const dateStr in (data.sessions || {})) {
+        if (!sessions[dateStr]) sessions[dateStr] = [];
+        const existingSessIds = new Set(sessions[dateStr].map(s => `${s.taskId}-${s.startTime}`));
+        (data.sessions[dateStr] || []).forEach(s => {
+          if (!existingSessIds.has(`${s.taskId}-${s.startTime}`)) sessions[dateStr].push(s);
+        });
+      }
+      // Deep merge calendarTasks
+      for (const dateStr in (data.calendarTasks || {})) {
+        if (!calendarTasks[dateStr]) calendarTasks[dateStr] = [];
+        const existingCtIds = new Set(calendarTasks[dateStr].map(ct => ct.id));
+        (data.calendarTasks[dateStr] || []).forEach(ct => {
+          if (!existingCtIds.has(ct.id)) calendarTasks[dateStr].push(ct);
+        });
+      }
+      saveLocal();
+      saveCalendarTasks();
+      // Sync to cloud if online
+      if (navigator.onLine && user) { fullSync(); }
+      renderCalendar();
+      renderCalendarTasks();
+      renderGrid();
+      setSyncStatus('online', '已导入');
+      setTimeout(() => setSyncStatus('online', '已同步'), 2000);
+    } catch {
+      alert('文件格式不对');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
 }
 
 // Init
