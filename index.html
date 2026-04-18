@@ -9,7 +9,26 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>学习追踪</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+  <link rel="icon" type="image/svg+xml" href="icon-512.svg" />
+  <script>
+    // Apply theme ASAP to prevent flash-of-wrong-theme
+    (function() {
+      try {
+        var saved = localStorage.getItem('lt_theme') || 'auto';
+        document.documentElement.setAttribute('data-theme', saved);
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        var sync = function() {
+          document.documentElement.setAttribute('data-system-dark', mq.matches ? '1' : '0');
+        };
+        sync();
+        mq.addEventListener ? mq.addEventListener('change', sync) : mq.addListener(sync);
+      } catch(e) {}
+    })();
+  </script>
   <style>
     /* ============================================================
        学习追踪 — v5 polish
@@ -68,38 +87,59 @@
       --t-slow: 0.32s;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f0f12;
-        --bg-elev: #1c1c21;
-        --card: #1a1a1f;
-        --border: #26262c;
-        --border-strong: #33333a;
+    /* Dark theme — activated via html[data-theme="dark"] or system pref when data-theme="auto" */
+    html[data-theme="dark"], html[data-theme="auto"][data-system-dark="1"] {
+      --bg: #0f0f12;
+      --bg-elev: #1c1c21;
+      --card: #1a1a1f;
+      --border: #26262c;
+      --border-strong: #33333a;
 
-        --text-primary: #f2f2f5;
-        --text-secondary: #8f8f99;
-        --text-tertiary: #5c5c66;
+      --text-primary: #f2f2f5;
+      --text-secondary: #8f8f99;
+      --text-tertiary: #5c5c66;
 
-        --accent: #6a94ff;
-        --accent-soft: #1d2a4a;
-        --accent-ink: #9db7ff;
-        --green: #4fcc88;
-        --green-soft: #15301f;
-        --yellow: #f5b740;
-        --yellow-soft: #332811;
-        --purple: #b880ea;
-        --purple-soft: #2a1c3a;
-        --red: #ef685c;
-        --red-soft: #3a1a17;
+      --accent: #6a94ff;
+      --accent-soft: #1d2a4a;
+      --accent-ink: #9db7ff;
+      --green: #4fcc88;
+      --green-soft: #15301f;
+      --yellow: #f5b740;
+      --yellow-soft: #332811;
+      --purple: #b880ea;
+      --purple-soft: #2a1c3a;
+      --red: #ef685c;
+      --red-soft: #3a1a17;
 
-        --cell-pending: #26262c;
+      --cell-pending: #26262c;
 
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-        --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
-        --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.5);
-        --shadow-fab: 0 6px 20px rgba(106, 148, 255, 0.4);
-      }
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.5);
+      --shadow-fab: 0 6px 20px rgba(106, 148, 255, 0.4);
     }
+
+    /* Theme menu */
+    .theme-menu-wrap { position: relative; }
+    .theme-menu {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-md); box-shadow: var(--shadow-lg);
+      min-width: 132px; padding: 4px; z-index: 110;
+      opacity: 0; transform: translateY(-4px); pointer-events: none;
+      transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+    }
+    .theme-menu.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .theme-opt {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; padding: 8px 10px; border: none; background: transparent;
+      font-size: 13px; color: var(--text-primary); cursor: pointer;
+      border-radius: 8px; text-align: left;
+    }
+    .theme-opt:hover { background: var(--bg-elev); }
+    .theme-opt .t-check { margin-left: auto; color: var(--accent); opacity: 0; }
+    .theme-opt.sel .t-check { opacity: 1; }
+    .theme-opt svg { width: 14px; height: 14px; color: var(--text-secondary); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -240,6 +280,8 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; color: var(--text-secondary);
       transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+      font-size: 13px; font-weight: 700;
+      padding: 0; line-height: 1;
     }
     .icon-btn:active { transform: scale(0.92); background: var(--border-strong); }
     .icon-btn svg { width: 16px; height: 16px; }
@@ -264,14 +306,203 @@
     .tab-btn.active { color: var(--text-primary); }
     .tab-indicator {
       position: absolute; top: 3px; bottom: 3px;
-      width: calc(50% - 3px);
+      width: calc(33.333% - 2px);
       background: var(--card);
       border-radius: 9px;
       box-shadow: var(--shadow-sm);
       transition: transform var(--t-slow) var(--ease-out);
     }
     .tab-indicator[data-tab="grid"] { transform: translateX(100%); }
+    .tab-indicator[data-tab="stats"] { transform: translateX(200%); }
     .tab-btn svg { width: 14px; height: 14px; }
+
+    /* ── Stats page ─────────────────────────────────── */
+    .stats-hero {
+      background: var(--card); border-radius: var(--r-lg);
+      border: 1px solid var(--border); box-shadow: var(--shadow-md);
+      padding: 18px 16px 14px; margin-bottom: 12px;
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+    }
+    .stat-kpi { text-align: center; }
+    .stat-kpi .num {
+      font-size: 28px; font-weight: 800; letter-spacing: -0.8px;
+      color: var(--text-primary); line-height: 1;
+    }
+    .stat-kpi .num .unit {
+      font-size: 14px; font-weight: 600; color: var(--text-secondary);
+      margin-left: 2px;
+    }
+    .stat-kpi .label {
+      font-size: 11px; font-weight: 600; color: var(--text-secondary);
+      margin-top: 6px; letter-spacing: 0.4px;
+    }
+    .stat-kpi.streak .num { color: var(--accent); }
+    .stat-kpi.today .num { color: var(--yellow); }
+    .stat-kpi.total .num { color: var(--green); }
+
+    .stats-section {
+      background: var(--card); border-radius: var(--r-lg);
+      border: 1px solid var(--border); box-shadow: var(--shadow-md);
+      padding: 14px 16px 16px; margin-bottom: 12px;
+    }
+    .stats-section h3 {
+      font-size: 14px; font-weight: 700; letter-spacing: -0.1px;
+      margin-bottom: 10px; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .stats-section h3 .sub {
+      font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+    }
+
+    /* heatmap: 7 cols x N rows */
+    .heatmap {
+      display: grid; grid-template-columns: auto repeat(var(--weeks, 13), 1fr);
+      gap: 3px; align-items: center;
+    }
+    .heatmap .hm-wd {
+      font-size: 10px; color: var(--text-tertiary);
+      text-align: right; padding-right: 6px; height: 14px; line-height: 14px;
+    }
+    .hm-cell {
+      aspect-ratio: 1; border-radius: 3px;
+      background: var(--cell-pending);
+      transition: transform var(--t-fast) var(--ease-out);
+    }
+    .hm-cell:hover { transform: scale(1.25); z-index: 2; position: relative; }
+    .hm-cell.l1 { background: color-mix(in srgb, var(--green) 28%, var(--cell-pending)); }
+    .hm-cell.l2 { background: color-mix(in srgb, var(--green) 55%, var(--cell-pending)); }
+    .hm-cell.l3 { background: color-mix(in srgb, var(--green) 80%, var(--cell-pending)); }
+    .hm-cell.l4 { background: var(--green); }
+    .hm-cell.future { background: transparent; border: 1px dashed var(--border); }
+    .hm-cell.today-mark { box-shadow: 0 0 0 1.5px var(--accent); }
+    .heatmap-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 10px; font-size: 10px; color: var(--text-tertiary);
+    }
+    .heatmap-scale { display: flex; gap: 3px; align-items: center; }
+    .heatmap-scale .sq {
+      width: 10px; height: 10px; border-radius: 2px; background: var(--cell-pending);
+    }
+
+    /* per-task rank list */
+    .task-rank { display: flex; flex-direction: column; gap: 10px; }
+    .task-rank-row {
+      display: grid; grid-template-columns: 10px 1fr auto; gap: 10px;
+      align-items: center;
+    }
+    .task-rank-row .swatch {
+      width: 10px; height: 10px; border-radius: 3px;
+    }
+    .task-rank-row .name {
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .task-rank-row .bar-wrap {
+      grid-column: 2 / -1; height: 6px;
+      background: var(--cell-pending); border-radius: 3px; overflow: hidden;
+    }
+    .task-rank-row .bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s var(--ease-out); }
+    .task-rank-row .count {
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* milestones strip */
+    .milestone-strip {
+      display: flex; gap: 8px; overflow-x: auto;
+      margin: 0 -16px; padding: 2px 16px 4px;
+      scrollbar-width: none;
+    }
+    .milestone-strip::-webkit-scrollbar { display: none; }
+    .milestone {
+      flex: 0 0 auto;
+      padding: 8px 12px; border-radius: var(--r-pill);
+      font-size: 12px; font-weight: 600;
+      background: var(--bg-elev); color: var(--text-secondary);
+      border: 1px solid var(--border);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .milestone.hit {
+      background: var(--green-soft); color: #1a6b3a;
+      border-color: color-mix(in srgb, var(--green) 35%, transparent);
+    }
+    .milestone .ms-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--text-tertiary);
+    }
+    .milestone.hit .ms-dot { background: var(--green); }
+
+    .stats-empty {
+      text-align: center; padding: 40px 16px; color: var(--text-tertiary);
+      font-size: 13px;
+    }
+
+    /* ── Task color tag in grid ─────────────────────────── */
+    .task-color-bar {
+      width: 4px; align-self: stretch; border-radius: 2px;
+      margin-right: 12px; flex-shrink: 0;
+      background: var(--accent);
+    }
+    .task-color-row {
+      display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .task-color-row .swatch {
+      width: 22px; height: 22px; border-radius: 50%;
+      cursor: pointer; transition: transform var(--t-fast) var(--ease-spring);
+      border: 2px solid transparent;
+    }
+    .task-color-row .swatch:active { transform: scale(0.88); }
+    .task-color-row .swatch.sel {
+      border-color: var(--text-primary);
+    }
+
+    /* ── Confetti ─────────────────────────────────── */
+    .confetti-root {
+      position: fixed; inset: 0; pointer-events: none; z-index: 460;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute; width: 8px; height: 12px;
+      border-radius: 2px;
+      animation: confetti-fall 1.6s cubic-bezier(0.2, 0.6, 0.4, 1) forwards;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── Carry-forward suggestion ─────────────────────── */
+    .carry-card {
+      background: var(--yellow-soft);
+      border: 1px solid color-mix(in srgb, var(--yellow) 30%, transparent);
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+      animation: slideIn 0.25s var(--ease-out);
+    }
+    .carry-card .carry-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--yellow); color: #4d3a08;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-weight: 800; font-size: 12px;
+    }
+    .carry-card .carry-text {
+      flex: 1; font-size: 13px; font-weight: 500; color: #7a5408;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .carry-card .carry-btn {
+      background: var(--yellow); color: #4d3a08;
+      border: none; padding: 5px 10px; border-radius: var(--r-pill);
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      transition: transform var(--t-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+    .carry-card .carry-btn:active { transform: scale(0.94); }
+    .carry-card .carry-dismiss {
+      border: none; background: transparent; cursor: pointer;
+      color: #7a5408; font-size: 14px; line-height: 1;
+      padding: 2px 4px;
+    }
 
     /* ── Container ─────────────────────────────────── */
     .container { max-width: 560px; margin: 0 auto; padding: 0 16px; }
@@ -444,13 +675,13 @@
     .task-card.open { box-shadow: var(--shadow-lg); }
     .task-header {
       padding: 14px 16px;
-      display: flex; align-items: center;
+      display: flex; align-items: stretch;
       justify-content: space-between;
       cursor: pointer;
       transition: background var(--t-fast) var(--ease-out);
     }
     .task-header:active { background: var(--bg-elev); }
-    .task-info { flex: 1; min-width: 0; }
+    .task-info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
     .task-name {
       font-size: 16px; font-weight: 600; letter-spacing: -0.1px;
       margin-bottom: 4px;
@@ -845,6 +1076,42 @@
     </div>
     <div class="header-right">
       <span class="sync-pill" id="syncStatus"><span class="sync-dot"></span><span id="syncLabel">已同步</span></span>
+      <div class="theme-menu-wrap">
+        <button class="icon-btn" id="themeBtn" aria-label="主题">
+          <svg id="themeIconSun" viewBox="0 0 24 24" fill="none" style="display:none;"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg id="themeIconMoon" viewBox="0 0 24 24" fill="none" style="display:none;"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <svg id="themeIconAuto" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M12 4v16a8 8 0 0 0 0-16Z" fill="currentColor"/></svg>
+        </button>
+        <div class="theme-menu" id="themeMenu">
+          <button class="theme-opt" data-theme-set="auto">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M12 4v16a8 8 0 0 0 0-16Z" fill="currentColor"/></svg>
+            跟随系统
+            <svg class="t-check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="theme-opt" data-theme-set="light">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            浅色
+            <svg class="t-check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="theme-opt" data-theme-set="dark">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            深色
+            <svg class="t-check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="theme-menu-wrap">
+        <button class="icon-btn" id="userBtn" aria-label="账号" style="background:var(--accent-soft);color:var(--accent-ink);">
+          <span id="userBadgeInitial">R</span>
+        </button>
+        <div class="theme-menu" id="userMenu">
+          <div style="padding:8px 10px 4px;font-size:11px;color:var(--text-tertiary);" id="userMenuName">—</div>
+          <button class="theme-opt" id="logoutBtn">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            退出登录
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -857,6 +1124,10 @@
     <button class="tab-btn" data-tab="grid" role="tab">
       <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
       网格
+    </button>
+    <button class="tab-btn" data-tab="stats" role="tab">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      统计
     </button>
   </div>
 
@@ -889,6 +1160,9 @@
         <div class="empty-title">开启第一个任务</div>
         <div class="empty-sub">点击下方按钮,把要追踪的学习目标加进来</div>
       </div>
+    </div>
+    <div class="tab-page" id="statsPage">
+      <div id="statsContent"></div>
     </div>
   </div>
 
@@ -941,6 +1215,26 @@ const USER_ACCOUNTS = {
 const STORAGE_KEY = 'learning_tracker_v5';
 const TARGET = 30;
 const GRID_SIZE = 60;
+
+// Task color palette (semantic, tied to design system)
+const TASK_COLORS = [
+  { key: 'blue',   hex: '#4a7dff' },
+  { key: 'green',  hex: '#3ec177' },
+  { key: 'purple', hex: '#a668e0' },
+  { key: 'orange', hex: '#ef8a3d' },
+  { key: 'red',    hex: '#e5564b' },
+  { key: 'yellow', hex: '#f5b740' },
+];
+function taskColor(task) {
+  if (task && task.color) {
+    const found = TASK_COLORS.find(c => c.key === task.color);
+    if (found) return found.hex;
+  }
+  // stable hash fallback
+  const id = (task && task.id) || '';
+  let h = 0; for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return TASK_COLORS[h % TASK_COLORS.length].hex;
+}
 
 let sessionToken = null;
 let sessionUser = null;
@@ -1010,9 +1304,10 @@ async function apiSaveData(userId, payload) {
 async function checkSession() {
   if (sessionToken && sessionUser) {
     user = sessionUser;
+    loadFromLocal();      // instant — whatever we cached last time
     showApp();
-    await loadFromCloud();
-    initApp();
+    initApp();            // wire up UI now, don't wait for network
+    loadFromCloud();      // background: may overwrite + re-render when done
   } else {
     showAuth();
     setTimeout(() => document.getElementById('authUser').focus(), 200);
@@ -1075,7 +1370,9 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
       expires_at: Date.now() + data.expires_in * 1000
     }));
     showApp();
-    loadFromCloud().then(() => initApp());
+    loadFromLocal();
+    initApp();
+    loadFromCloud();
   } catch (e) {
     setAuthError('密码错误,请重试');
     setInputInvalid('authPass', true);
@@ -1099,41 +1396,50 @@ document.getElementById('authPass').addEventListener('input', () => {
 });
 
 // ── Cloud Sync ──
-async function loadFromCloud() {
+// Read whatever is cached locally (fast, synchronous-ish, no network).
+// Accepts v4 key as legacy fallback.
+function loadFromLocal() {
+  try {
+    const localRaw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('learning_tracker_v4');
+    if (localRaw) {
+      const local = JSON.parse(localRaw);
+      tasks = local.tasks || [];
+      sessions = local.sessions || {};
+      calendarTasks = local.calendar_tasks || {};
+      return true;
+    }
+  } catch { /* ignore */ }
+  return false;
+}
+
+// Fetch cloud state in the background. If successful, overwrite in-memory
+// state with the cloud version and re-render. If it fails (offline, timeout,
+// auth issue), we keep whatever local state we already have and flag sync.
+async function loadFromCloud({ silent = false } = {}) {
   if (!user) return;
-  showLoading('正在加载…');
+  if (!silent) setSyncStatus('syncing', '同步中');
   try {
     const row = await apiLoadData(user.id);
     if (row && row.tasks) {
       tasks = row.tasks;
       sessions = row.sessions || {};
       calendarTasks = row.calendar_tasks || {};
-    } else {
-      // fallback to local cache
+      // Mirror to local cache so next launch is instant.
       try {
-        const localRaw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('learning_tracker_v4');
-        if (localRaw) {
-          const local = JSON.parse(localRaw);
-          tasks = local.tasks || [];
-          sessions = local.sessions || {};
-          calendarTasks = local.calendar_tasks || {};
-          setTimeout(saveToCloud, 3000);
-        }
-      } catch { /* ignore */ }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks }));
+      } catch {}
+      // Re-render if the app has already mounted.
+      if (_initialized) {
+        renderCalendar(); renderGrid(); renderStats();
+      }
+    } else {
+      // No cloud row yet — push whatever we have locally so next device sees it.
+      setTimeout(saveToCloud, 1500);
     }
+    setSyncStatus('online', '已同步');
   } catch (e) {
     console.error('Cloud load failed:', e);
-    try {
-      const localRaw = localStorage.getItem(STORAGE_KEY);
-      if (localRaw) {
-        const local = JSON.parse(localRaw);
-        tasks = local.tasks || [];
-        sessions = local.sessions || {};
-        calendarTasks = local.calendar_tasks || {};
-      }
-    } catch { /* ignore */ }
-  } finally {
-    hideLoading();
+    setSyncStatus('error', '同步失败');
   }
 }
 
@@ -1162,7 +1468,10 @@ function saveLocal() {
 }
 
 // ── Init ──
+let _initialized = false;
 function initApp() {
+  if (_initialized) return;
+  _initialized = true;
   todayKey = getTodayKey();
   selectedDate = todayKey;
   calYear = new Date().getFullYear();
@@ -1170,6 +1479,7 @@ function initApp() {
   renderHeaderDate();
   renderCalendar();
   renderGrid();
+  renderStats();
   bindEvents();
   setInterval(checkDayChange, 60000);
 
@@ -1334,6 +1644,7 @@ function renderCalendarTasks() {
       deleteCalendarTask(d, parseInt(i));
     });
   });
+  renderCarryForward();
 }
 
 // ── Grid ──
@@ -1440,11 +1751,12 @@ function buildCardHTML(task) {
 
   return `
     <div class="task-header" data-task-toggle="${task.id}">
+      <div class="task-color-bar" style="background:${taskColor(task)}"></div>
       <div class="task-info">
         <div class="task-name">${escHtml(task.name)}</div>
         <div class="task-meta">
           <span class="count">${totalDone}</span><span class="sep">/ ${TARGET}</span>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%;background:${taskColor(task)}"></div></div>
           <span class="sep">· ${subtasks.length} 个子任务</span>
           ${metaTags.join('')}
         </div>
@@ -1455,6 +1767,9 @@ function buildCardHTML(task) {
       <div class="task-body-inner">
         ${legendHTML}
         <div class="subtasks-section">${subtasksHTML || '<div style="padding:8px 4px 4px;font-size:13px;color:var(--text-tertiary);">还没有子任务,点下方按钮添加</div>'}</div>
+        <div class="task-color-row" data-task-colors="${task.id}">
+          ${TASK_COLORS.map(c => `<span class="swatch ${(task.color||'')===c.key?'sel':''}" data-pick-color="${task.id}|${c.key}" style="background:${c.hex}"></span>`).join('')}
+        </div>
         <div class="task-card-footer">
           <button class="add-subtask-btn" data-add-sub="${task.id}">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -1538,22 +1853,68 @@ function bindCardEvents() {
       if (confirm('确定删除这个任务?')) deleteTask(el.dataset.delTask);
     });
   });
+  document.querySelectorAll('[data-pick-color]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const [taskId, colorKey] = el.dataset.pickColor.split('|');
+      const t = tasks.find(x => x.id === taskId);
+      if (!t) return;
+      t.color = (t.color === colorKey) ? null : colorKey;
+      saveLocal(); renderGrid(); renderStats();
+      haptic();
+    });
+  });
 }
 
 function addProgress(taskId, subIdx, persist = true) {
   const task = tasks.find(t => t.id === taskId);
   if (!task || !task.subtasks[subIdx]) return;
   const sub = task.subtasks[subIdx];
+  const prevDone = sub.cells.filter(c => c.done).length;
   for (let i = 0; i < sub.cells.length; i++) {
     if (!sub.cells[i].done) {
       sub.cells[i].done = true;
       sub.cells[i].doneToday = true;
+      // Track session for heatmap/stats
+      if (!sessions[todayKey]) sessions[todayKey] = [];
+      sessions[todayKey].push({ t: Date.now(), task: taskId, sub: subIdx });
+      const nowDone = prevDone + 1;
+      if (nowDone === TARGET) {
+        celebrate(taskColor(task));
+        toast(`🎉 「${task.name} · ${sub.name}」达成 30`);
+      } else if (nowDone === TARGET + 30) {
+        celebrate('#a668e0');
+        toast(`💜 双倍达成！60 / 60`);
+      }
       break;
     }
   }
   if (persist) {
-    saveLocal(); renderGrid(); renderCalendar();
+    saveLocal(); renderGrid(); renderCalendar(); renderStats();
   }
+}
+
+// Confetti celebration
+function celebrate(tint) {
+  const root = document.createElement('div');
+  root.className = 'confetti-root';
+  const colors = [tint || '#4a7dff', '#3ec177', '#f5b740', '#a668e0', '#ef8a3d'];
+  for (let i = 0; i < 42; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    const c = colors[i % colors.length];
+    p.style.background = c;
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.top = (-10 - Math.random() * 20) + 'px';
+    p.style.animationDelay = (Math.random() * 0.2) + 's';
+    p.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+    p.style.transform = `rotate(${Math.random() * 360}deg)`;
+    if (Math.random() > 0.5) p.style.borderRadius = '50%';
+    root.appendChild(p);
+  }
+  document.body.appendChild(root);
+  haptic();
+  setTimeout(() => root.remove(), 2200);
 }
 
 function undoLastYellow(taskId, subIdx) {
@@ -1568,6 +1929,251 @@ function undoLastYellow(taskId, subIdx) {
     }
   }
   saveLocal(); renderGrid(); renderCalendar();
+}
+
+// ── Stats ──
+function computeStats() {
+  // per-day session counts (use both tracked sessions and fallback: just counts of doneToday across saves)
+  // streak: consecutive days with >=1 activity ending today or yesterday
+  const today = new Date(todayKey + 'T00:00:00');
+  const dayCount = {};
+  Object.keys(sessions || {}).forEach(k => {
+    dayCount[k] = (sessions[k] || []).length;
+  });
+  Object.keys(calendarTasks || {}).forEach(k => {
+    const done = (calendarTasks[k] || []).filter(c => c.done).length;
+    if (done > 0) dayCount[k] = (dayCount[k] || 0) + done;
+  });
+
+  // streak
+  let streak = 0;
+  let cur = new Date(today);
+  // allow a single-day grace: if today=0 but yesterday>0, streak starts at yesterday
+  if (!dayCount[fmtKey(cur)]) cur.setDate(cur.getDate() - 1);
+  while (dayCount[fmtKey(cur)]) {
+    streak++;
+    cur.setDate(cur.getDate() - 1);
+  }
+
+  // longest streak (scan all keys)
+  const allDays = Object.keys(dayCount).sort();
+  let longest = 0, run = 0, prev = null;
+  allDays.forEach(k => {
+    if (!dayCount[k]) return;
+    if (prev && (new Date(k) - new Date(prev)) === 86400000) run++; else run = 1;
+    if (run > longest) longest = run;
+    prev = k;
+  });
+
+  // totals
+  let totalCells = 0, totalToday = 0;
+  tasks.forEach(t => (t.subtasks || []).forEach(st => st.cells.forEach(c => {
+    if (c.done) { totalCells++; if (c.doneToday) totalToday++; }
+  })));
+
+  return { streak, longest, totalCells, totalToday, dayCount };
+}
+
+function fmtKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function renderStats() {
+  const container = document.getElementById('statsContent');
+  if (!container) return;
+  const { streak, longest, totalCells, totalToday, dayCount } = computeStats();
+
+  if (tasks.length === 0 && Object.keys(dayCount).length === 0) {
+    container.innerHTML = `
+      <div class="stats-empty">
+        还没有数据,先去网格打卡一下吧
+      </div>`;
+    return;
+  }
+
+  // 13-week heatmap (91 days) ending today
+  const weeks = 13;
+  const days = weeks * 7;
+  const end = new Date(todayKey + 'T00:00:00');
+  // align so last column is current week, bottom row is today's weekday
+  const gridStart = new Date(end);
+  gridStart.setDate(gridStart.getDate() - (days - 1));
+  // shift start back to a Sunday for column alignment
+  gridStart.setDate(gridStart.getDate() - gridStart.getDay());
+  const cells = [];
+  const cellDate = new Date(gridStart);
+  const weekdayLabels = ['日','','二','','四','','六'];
+  // build column-major so it reads like GitHub
+  const columns = [];
+  const totalCols = Math.ceil((days + gridStart.getDay()) / 7) + 1;
+  for (let col = 0; col < totalCols; col++) {
+    const colCells = [];
+    for (let row = 0; row < 7; row++) {
+      const d = new Date(gridStart);
+      d.setDate(d.getDate() + col * 7 + row);
+      colCells.push(d);
+    }
+    columns.push(colCells);
+  }
+
+  // compute max for scaling
+  const counts = Object.values(dayCount);
+  const max = counts.length ? Math.max(...counts) : 0;
+  const level = (n) => {
+    if (!n) return 0;
+    if (max <= 1) return n ? 4 : 0;
+    const r = n / max;
+    if (r > 0.75) return 4;
+    if (r > 0.5)  return 3;
+    if (r > 0.25) return 2;
+    return 1;
+  };
+
+  // Layout: 7 rows (weekday cols) × N cols in a CSS grid. We'll arrange by row=weekday, col=week.
+  // Build a grid of html cells per row.
+  const rowsHtml = [];
+  for (let row = 0; row < 7; row++) {
+    let rowHtml = `<div class="hm-wd">${weekdayLabels[row]}</div>`;
+    for (let col = 0; col < totalCols; col++) {
+      const d = columns[col][row];
+      const k = fmtKey(d);
+      const n = dayCount[k] || 0;
+      const lvl = level(n);
+      const isFuture = d > end;
+      const isToday = k === todayKey;
+      let cls = 'hm-cell';
+      if (isFuture) cls += ' future';
+      else if (lvl) cls += ' l' + lvl;
+      if (isToday) cls += ' today-mark';
+      const title = isFuture ? k : `${k} · ${n} 次`;
+      rowHtml += `<div class="${cls}" title="${title}"></div>`;
+    }
+    rowsHtml.push(rowHtml);
+  }
+
+  const heatmapHTML = `
+    <div class="heatmap" style="--weeks:${totalCols}">
+      ${rowsHtml.join('')}
+    </div>
+    <div class="heatmap-foot">
+      <span>近 ${weeks} 周 · 每格一天</span>
+      <span class="heatmap-scale">
+        少
+        <span class="sq"></span>
+        <span class="sq" style="background:color-mix(in srgb, var(--green) 28%, var(--cell-pending))"></span>
+        <span class="sq" style="background:color-mix(in srgb, var(--green) 55%, var(--cell-pending))"></span>
+        <span class="sq" style="background:color-mix(in srgb, var(--green) 80%, var(--cell-pending))"></span>
+        <span class="sq" style="background:var(--green)"></span>
+        多
+      </span>
+    </div>`;
+
+  // per-task ranking
+  const ranked = tasks.map(t => {
+    let done = 0;
+    (t.subtasks || []).forEach(st => st.cells.forEach(c => { if (c.done) done++; }));
+    return { task: t, done };
+  }).sort((a, b) => b.done - a.done);
+
+  const maxRank = Math.max(1, ...ranked.map(r => r.done));
+  const rankHTML = ranked.length ? `
+    <div class="task-rank">
+      ${ranked.map(r => {
+        const color = taskColor(r.task);
+        const pct = (r.done / maxRank) * 100;
+        return `
+          <div>
+            <div class="task-rank-row">
+              <span class="swatch" style="background:${color}"></span>
+              <span class="name">${escHtml(r.task.name)}</span>
+              <span class="count">${r.done}</span>
+            </div>
+            <div class="task-rank-row" style="margin-top:4px;">
+              <div class="bar-wrap" style="grid-column:2 / -1;">
+                <div class="bar-fill" style="width:${pct}%;background:${color}"></div>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+  ` : `<div class="stats-empty" style="padding:20px 0;">还没有任务</div>`;
+
+  // Milestones (lifetime cells)
+  const milestones = [10, 30, 60, 100, 300, 500, 1000];
+  const msHTML = milestones.map(m => `
+    <div class="milestone ${totalCells >= m ? 'hit' : ''}">
+      <span class="ms-dot"></span>${m}
+    </div>`).join('');
+
+  container.innerHTML = `
+    <div class="stats-hero">
+      <div class="stat-kpi streak">
+        <div class="num">${streak}<span class="unit">天</span></div>
+        <div class="label">连续</div>
+      </div>
+      <div class="stat-kpi today">
+        <div class="num">${totalToday}</div>
+        <div class="label">今日</div>
+      </div>
+      <div class="stat-kpi total">
+        <div class="num">${totalCells}</div>
+        <div class="label">累计</div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <h3>活跃热力 <span class="sub">最长 ${longest} 天</span></h3>
+      ${heatmapHTML}
+    </div>
+
+    <div class="stats-section">
+      <h3>任务排名 <span class="sub">按累计格子数</span></h3>
+      ${rankHTML}
+    </div>
+
+    <div class="stats-section">
+      <h3>里程碑 <span class="sub">累计 ${totalCells}</span></h3>
+      <div class="milestone-strip">${msHTML}</div>
+    </div>
+  `;
+}
+
+// ── Carry-forward ──
+let carryDismissedKey = null;
+function renderCarryForward() {
+  const container = document.getElementById('dayDetail');
+  if (!container || selectedDate !== todayKey) return;
+  // Find yesterday's incomplete plans
+  const y = new Date(todayKey + 'T00:00:00');
+  y.setDate(y.getDate() - 1);
+  const yKey = fmtKey(y);
+  const yPlans = (calendarTasks[yKey] || []).filter(c => !c.done);
+  if (yPlans.length === 0) return;
+  if (carryDismissedKey === todayKey) return;
+
+  // Only show if today has no plans yet, or to offer a bring-forward
+  const node = document.createElement('div');
+  node.className = 'carry-card';
+  node.innerHTML = `
+    <div class="carry-icon">↻</div>
+    <div class="carry-text">昨日还有 ${yPlans.length} 条未完成</div>
+    <button class="carry-btn" id="carryBringBtn">全部带过来</button>
+    <button class="carry-dismiss" id="carryDismissBtn" aria-label="关闭">×</button>
+  `;
+  container.insertBefore(node, container.firstChild);
+  document.getElementById('carryBringBtn').addEventListener('click', () => {
+    if (!calendarTasks[todayKey]) calendarTasks[todayKey] = [];
+    yPlans.forEach(p => {
+      calendarTasks[todayKey].push({ id: Date.now().toString() + Math.random().toString(36).slice(2,5), name: p.name, done: false });
+    });
+    saveLocal(); renderCalendar(); renderCalendarTasks();
+    toast(`已带过 ${yPlans.length} 条`);
+    haptic();
+  });
+  document.getElementById('carryDismissBtn').addEventListener('click', () => {
+    carryDismissedKey = todayKey;
+    node.remove();
+  });
 }
 
 // ── Calendar Tasks ──
@@ -1688,6 +2294,7 @@ function bindEvents() {
       document.getElementById(btn.dataset.tab + 'Page').classList.add('active');
       indicator.dataset.tab = btn.dataset.tab;
       updateFabText();
+      if (btn.dataset.tab === 'stats') renderStats();
     });
   });
 
@@ -1725,12 +2332,81 @@ function bindEvents() {
   window.addEventListener('online', () => setSyncStatus('online', '已同步'));
   window.addEventListener('offline', () => setSyncStatus('offline', '离线'));
 
+  // Theme toggle
+  const themeBtn = document.getElementById('themeBtn');
+  const themeMenu = document.getElementById('themeMenu');
+  const applyThemeUI = () => {
+    const t = localStorage.getItem('lt_theme') || 'auto';
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeIconSun').style.display  = t === 'light' ? 'block' : 'none';
+    document.getElementById('themeIconMoon').style.display = t === 'dark'  ? 'block' : 'none';
+    document.getElementById('themeIconAuto').style.display = t === 'auto'  ? 'block' : 'none';
+    themeMenu.querySelectorAll('.theme-opt').forEach(o => {
+      o.classList.toggle('sel', o.dataset.themeSet === t);
+    });
+    // Sync meta theme-color
+    const isDark = t === 'dark' || (t === 'auto' && document.documentElement.getAttribute('data-system-dark') === '1');
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.remove());
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    meta.content = isDark ? '#15151a' : '#f7f7f9';
+    document.head.appendChild(meta);
+  };
+  applyThemeUI();
+  themeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    themeMenu.classList.toggle('show');
+  });
+  themeMenu.querySelectorAll('[data-theme-set]').forEach(opt => {
+    opt.addEventListener('click', () => {
+      localStorage.setItem('lt_theme', opt.dataset.themeSet);
+      applyThemeUI();
+      themeMenu.classList.remove('show');
+      haptic();
+    });
+  });
+  document.addEventListener('click', () => themeMenu.classList.remove('show'));
+  // React to system changes if in auto mode
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
+    if ((localStorage.getItem('lt_theme') || 'auto') === 'auto') applyThemeUI();
+  });
+
+  // User menu
+  const userBtn = document.getElementById('userBtn');
+  const userMenu = document.getElementById('userMenu');
+  const userBadgeInitial = document.getElementById('userBadgeInitial');
+  const userMenuName = document.getElementById('userMenuName');
+  const email = (user && user.email) || '';
+  const username = email.split('@')[0] || 'me';
+  const nameMap = { raylan: 'Raylan', scarlett: 'Scarlett' };
+  const displayName = nameMap[username] || username;
+  userBadgeInitial.textContent = displayName.charAt(0).toUpperCase();
+  userMenuName.textContent = displayName;
+  userBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    userMenu.classList.toggle('show');
+    themeMenu.classList.remove('show');
+  });
+  document.addEventListener('click', () => userMenu.classList.remove('show'));
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (!confirm('确定退出登录?')) return;
+    localStorage.removeItem('lt_session');
+    location.reload();
+  });
+
   updateFabText();
 }
 
 function updateFabText() {
   const activeTab = document.querySelector('.tab-btn.active')?.dataset.tab;
-  document.getElementById('fabLabel').textContent = activeTab === 'calendar' ? '添加计划' : '添加任务';
+  const fabGroup = document.querySelector('.fab-group');
+  const label = document.getElementById('fabLabel');
+  if (activeTab === 'stats') {
+    fabGroup.style.display = 'none';
+    return;
+  }
+  fabGroup.style.display = '';
+  label.textContent = activeTab === 'calendar' ? '添加计划' : '添加任务';
 }
 
 // Init

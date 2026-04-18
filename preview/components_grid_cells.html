@@ -7,24 +7,24 @@
 <style>
   .wrap { background: var(--card); border-radius: 16px; padding: 18px; box-shadow: var(--shadow-card); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8e8e93; font-weight: 500; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8a8a92; font-weight: 500; }
   .dot { width: 12px; height: 12px; border-radius: 50%; }
   .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; }
   .cell { aspect-ratio: 1; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 10px; font-weight: 500; }
-  .pending { background: #d1d1d6; color: #8e8e93; }
-  .done { background: #34c759; color: #fff; }
-  .today { background: #ffcc00; color: #1c1c1e; box-shadow: 0 0 0 2px rgba(255,204,0,0.35); }
-  .bonus { background: #af52de; color: #fff; }
+  .pending { background: #dcdce3; color: #8a8a92; }
+  .done { background: #3ec177; color: #fff; }
+  .today { background: #f5b740; color: #1c1c1e; box-shadow: 0 0 0 2px rgba(255,204,0,0.35); }
+  .bonus { background: #a668e0; color: #fff; }
 </style>
 </head>
 <body>
 <div class="card-root">
   <div class="wrap">
     <div class="legend">
-      <div class="legend-item"><div class="dot" style="background:#d1d1d6"></div>未完成</div>
-      <div class="legend-item"><div class="dot" style="background:#34c759"></div>已完成</div>
-      <div class="legend-item"><div class="dot" style="background:#ffcc00"></div>今日</div>
-      <div class="legend-item"><div class="dot" style="background:#af52de"></div>超额（&gt;30）</div>
+      <div class="legend-item"><div class="dot" style="background:#dcdce3"></div>未完成</div>
+      <div class="legend-item"><div class="dot" style="background:#3ec177"></div>已完成</div>
+      <div class="legend-item"><div class="dot" style="background:#f5b740"></div>今日</div>
+      <div class="legend-item"><div class="dot" style="background:#a668e0"></div>超额（&gt;30）</div>
     </div>
     <div class="grid">
       <div class="cell done">1</div><div class="cell done">2</div><div class="cell done">3</div>

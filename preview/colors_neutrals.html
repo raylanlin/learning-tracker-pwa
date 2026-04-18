@@ -7,12 +7,12 @@
 <style>
   .scale {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     background: var(--card);
     border-radius: 12px;
     padding: 14px;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-md);
   }
   .n-swatch {
     display: flex;
@@ -42,9 +42,14 @@
 <div class="card-root">
   <div class="scale">
     <div class="n-swatch">
-      <div class="n-chip" style="background:#f2f2f7"></div>
+      <div class="n-chip" style="background:#f7f7f9"></div>
       <div class="n-name">bg</div>
-      <div class="n-hex">#F2F2F7</div>
+      <div class="n-hex">#F7F7F9</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#eceef2"></div>
+      <div class="n-name">bg-elev</div>
+      <div class="n-hex">#ECEEF2</div>
     </div>
     <div class="n-swatch">
       <div class="n-chip" style="background:#ffffff"></div>
@@ -52,23 +57,28 @@
       <div class="n-hex">#FFFFFF</div>
     </div>
     <div class="n-swatch">
-      <div class="n-chip" style="background:#e5e5ea"></div>
+      <div class="n-chip" style="background:#ececf0"></div>
       <div class="n-name">border</div>
-      <div class="n-hex">#E5E5EA</div>
+      <div class="n-hex">#ECECF0</div>
     </div>
     <div class="n-swatch">
-      <div class="n-chip" style="background:#d1d1d6"></div>
-      <div class="n-name">gray</div>
-      <div class="n-hex">#D1D1D6</div>
+      <div class="n-chip" style="background:#dcdce3"></div>
+      <div class="n-name">border-strong</div>
+      <div class="n-hex">#DCDCE3</div>
     </div>
     <div class="n-swatch">
-      <div class="n-chip" style="background:#8e8e93"></div>
-      <div class="n-name">fg2</div>
-      <div class="n-hex">#8E8E93</div>
+      <div class="n-chip" style="background:#b4b4bc"></div>
+      <div class="n-name">text-tertiary</div>
+      <div class="n-hex">#B4B4BC</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#8a8a92"></div>
+      <div class="n-name">text-secondary</div>
+      <div class="n-hex">#8A8A92</div>
     </div>
     <div class="n-swatch">
       <div class="n-chip" style="background:#1c1c1e"></div>
-      <div class="n-name">fg1</div>
+      <div class="n-name">text-primary</div>
       <div class="n-hex">#1C1C1E</div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'learning-tracker-v1';
+const CACHE_NAME = 'learning-tracker-v2';
 const ASSETS = ['/', '/index.html', '/manifest.json'];
 
 self.addEventListener('install', e => {
@@ -18,11 +18,15 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // API calls: network first, then offline fallback
+  // API calls: network first, then offline fallback.
+  // Return a 503 (not 200) so the app's res.ok check correctly routes into
+  // its offline branch and flags "同步失败" instead of "已同步".
   if (e.request.url.includes('supabase')) {
     e.respondWith(
       fetch(e.request).catch(() => {
         return new Response(JSON.stringify({ error: 'offline' }), {
+          status: 503,
+          statusText: 'Service Unavailable',
           headers: { 'Content-Type': 'application/json' }
         });
       })

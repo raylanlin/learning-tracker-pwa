@@ -1,103 +1,171 @@
 /* ============================================================
-   Learning Tracker — Colors & Type
-   Source of truth for color and typography tokens.
-   Extracted directly from source/original_index.html.
+   Learning Tracker — Colors & Type (v5)
+   Source of truth for color, type, radius, shadow, motion tokens.
+   Extracted from index.html (v5 polish).
+   Differences from v4 (original iOS):
+     - Softer palette (off-iOS saturation) on a cooler canvas
+     - 3-step text scale (primary / secondary / tertiary)
+     - Explicit "soft" tints per accent for subtle backgrounds
+     - "ink" variant of accent for pressed states
+     - Dark theme variables (auto / explicit light / explicit dark)
    ============================================================ */
 
 :root {
-  /* ── Surface & Text ── */
-  --bg:              #f2f2f7;   /* page background (iOS systemGroupedBackground) */
-  --card:            #ffffff;   /* cards, modals, sheets */
-  --border:          #e5e5ea;   /* hairline dividers */
-  --gray:            #d1d1d6;   /* neutral fill / disabled / pending cell */
-  --text-primary:    #1c1c1e;   /* primary text */
-  --text-secondary:  #8e8e93;   /* secondary / caption text */
+  /* ── Neutrals ── */
+  --bg:            #f7f7f9;    /* page canvas */
+  --bg-elev:       #eceef2;    /* inset groups, inactive tabs, icon-btn bg */
+  --card:          #ffffff;    /* cards, modals, sheets */
+  --border:        #ececf0;    /* hairline dividers */
+  --border-strong: #dcdce3;    /* input borders, pressed icon-btn */
 
-  /* ── Semantic / Accent (iOS system colors) ── */
-  --accent:          #007aff;   /* blue — primary action, links, today */
-  --green:           #34c759;   /* complete / success */
-  --yellow:          #ffcc00;   /* today / in-progress / selected */
-  --purple:          #af52de;   /* bonus / beyond target */
-  --red:             #ff3b30;   /* destructive / error */
-  --orange:          #ff9500;   /* offline / warning */
+  /* ── Text ── */
+  --text-primary:   #1c1c1e;
+  --text-secondary: #8a8a92;
+  --text-tertiary:  #b4b4bc;
 
-  /* ── Foreground aliases ── */
-  --fg1: var(--text-primary);
-  --fg2: var(--text-secondary);
-  --bg1: var(--bg);
-  --bg2: var(--card);
+  /* ── Brand + accents (softer than raw iOS) ── */
+  --accent:       #4a7dff;     /* primary blue */
+  --accent-soft:  #e8efff;     /* faint blue wash — badges, tags */
+  --accent-ink:   #2d5fe0;     /* deeper blue — pressed, auth button active */
 
-  /* ── Shadows & Radii ── */
-  --shadow-card:    0 2px 12px rgba(0, 0, 0, 0.08);
-  --shadow-fab:     0 4px 20px rgba(0, 122, 255, 0.4);
-  --shadow-mini:    0 1px 6px rgba(0, 0, 0, 0.08);
-  --focus-ring-today: 0 0 0 3px rgba(255, 204, 0, 0.35);
+  --green:        #3ec177;
+  --green-soft:   #e2f5ea;
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;    /* default card radius (--radius in original) */
-  --radius-xl: 20px;    /* modal */
-  --radius-2xl: 24px;   /* auth card, fab */
-  --radius-pill: 999px;
+  --yellow:       #f5b740;     /* "today" cell + selected calendar day */
+  --yellow-soft:  #fff4dc;
+
+  --purple:       #a668e0;     /* bonus cells (>30) */
+  --purple-soft:  #f1e7fb;
+
+  --red:          #e5564b;     /* destructive, error */
+  --red-soft:     #fde9e7;
+
+  --orange:       #ef8a3d;     /* offline sync */
+
+  --cell-pending: #e9e9ee;     /* empty grid cell */
+
+  /* ── Elevation ── */
+  --shadow-sm:  0 1px 2px rgba(20, 20, 30, 0.04), 0 1px 1px rgba(20, 20, 30, 0.03);
+  --shadow-md:  0 2px 8px rgba(20, 20, 30, 0.05), 0 1px 2px rgba(20, 20, 30, 0.03);
+  --shadow-lg:  0 8px 28px rgba(20, 20, 30, 0.08), 0 2px 6px rgba(20, 20, 30, 0.04);
+  --shadow-fab: 0 6px 20px rgba(74, 125, 255, 0.32), 0 2px 6px rgba(74, 125, 255, 0.18);
+
+  /* ── Radius scale ── */
+  --r-sm:   8px;      /* tag-like buttons, subtask cells */
+  --r-md:   12px;     /* inputs, tab bar, small cards */
+  --r-lg:   16px;     /* default card radius */
+  --r-xl:   20px;     /* modal */
+  --r-pill: 999px;    /* pills, FAB, chips */
 
   /* ── Spacing scale (based on 4px grid) ── */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
   --space-10: 40px;
 
   /* ── Typography ── */
-  /* System stack used throughout — Apple SF on iOS/macOS, PingFang SC for CJK */
+  /* System stack — SF on Apple, PingFang SC for CJK, Noto/system elsewhere. */
   --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
                'Helvetica Neue', Arial, sans-serif;
 
-  /* Type scale */
-  --fs-11: 11px;   /* micro labels (user badge, legend) */
-  --fs-12: 12px;   /* captions, weekdays, backup buttons */
-  --fs-13: 13px;   /* header date, error */
-  --fs-14: 14px;   /* tab label, hint, buttons */
-  --fs-15: 15px;   /* calendar day, subtask title, sheet body */
-  --fs-16: 16px;   /* inputs, primary buttons */
-  --fs-17: 17px;   /* task title */
-  --fs-18: 18px;   /* modal h2 / section title */
-  --fs-22: 22px;   /* app header h1 */
-  --fs-28: 28px;   /* auth h1 (display) */
+  --fs-11: 11px;  --fs-12: 12px;  --fs-13: 13px;  --fs-14: 14px;  --fs-15: 15px;
+  --fs-16: 16px;  --fs-17: 17px;  --fs-18: 18px;  --fs-22: 22px;  --fs-28: 28px;
 
-  --fw-regular: 400;
-  --fw-medium:  500;
+  --fw-regular:  400;
+  --fw-medium:   500;
   --fw-semibold: 600;
-  --fw-bold:    700;
-  --fw-black:   800;
+  --fw-bold:     700;
+  --fw-black:    800;
 
   --lh-tight:  1.1;
   --lh-snug:   1.25;
   --lh-normal: 1.4;
 
   /* ── Motion ── */
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast:   0.15s;
-  --dur-base:   0.2s;
-  --dur-slow:   0.35s;
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);      /* standard decelerate */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);   /* modal entry only */
+  --t-fast: 0.15s;
+  --t-med:  0.2s;
+  --t-slow: 0.32s;
 
   /* ── Layout ── */
-  --content-max: 520px;     /* phone-centric max content width */
-  --tap-min: 44px;          /* iOS HIG minimum hit target */
+  --content-max: 560px;     /* phone-centric max content width (was 520 in v4) */
+  --tap-min:     44px;      /* iOS HIG minimum hit target */
+
+  /* ── Legacy aliases (for older preview cards and UI kits) ── */
+  /* v4 names mapped to their v5 equivalents so old files keep working. */
+  --fg1: var(--text-primary);
+  --fg2: var(--text-secondary);
+  --bg1: var(--bg);
+  --bg2: var(--card);
+  --gray: var(--border-strong);             /* was #d1d1d6 in v4 */
+  --shadow-card: var(--shadow-md);
+  --shadow-mini: var(--shadow-sm);
+  --focus-ring-today: 0 0 0 3px rgba(245, 183, 64, 0.35);
+  --radius-sm:   var(--r-sm);
+  --radius-md:   var(--r-md);
+  --radius-lg:   var(--r-lg);
+  --radius-xl:   var(--r-xl);
+  --radius-2xl:  24px;
+  --radius-pill: var(--r-pill);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: var(--t-fast);
+  --dur-base: var(--t-med);
+  --dur-slow: var(--t-slow);
 }
 
 /* ============================================================
-   Semantic element styles
-   Use these as a baseline; override per component where needed.
+   Dark theme — activated via html[data-theme="dark"] or system
+   preference when data-theme="auto".
+   ============================================================ */
+html[data-theme="dark"],
+html[data-theme="auto"][data-system-dark="1"] {
+  --bg:            #0f0f12;
+  --bg-elev:       #1c1c21;
+  --card:          #1a1a1f;
+  --border:        #26262c;
+  --border-strong: #33333a;
+
+  --text-primary:   #f2f2f5;
+  --text-secondary: #8f8f99;
+  --text-tertiary:  #5c5c66;
+
+  --accent:       #6a94ff;
+  --accent-soft:  #1d2a4a;
+  --accent-ink:   #9db7ff;
+
+  --green:        #4fcc88;
+  --green-soft:   #15301f;
+
+  --yellow:       #f5b740;
+  --yellow-soft:  #332811;
+
+  --purple:       #b880ea;
+  --purple-soft:  #2a1c3a;
+
+  --red:          #ef685c;
+  --red-soft:     #3a1a17;
+
+  --cell-pending: #26262c;
+
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-lg:  0 8px 28px rgba(0, 0, 0, 0.5);
+  --shadow-fab: 0 6px 20px rgba(106, 148, 255, 0.4);
+}
+
+/* ============================================================
+   Baseline element styles — use these then override per component.
    ============================================================ */
 
 html, body {
   font-family: var(--font-sans);
-  color: var(--fg1);
-  background: var(--bg1);
+  color: var(--text-primary);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -136,18 +204,18 @@ p, .body {
 .caption {
   font-size: var(--fs-12);
   font-weight: var(--fw-semibold);
-  color: var(--fg2);
+  color: var(--text-secondary);
 }
 
 .micro {
   font-size: var(--fs-11);
   font-weight: var(--fw-semibold);
-  color: var(--fg2);
+  color: var(--text-tertiary);
 }
 
 .meta {
   font-size: var(--fs-13);
-  color: var(--fg2);
+  color: var(--text-secondary);
   font-weight: var(--fw-medium);
 }
 
@@ -160,7 +228,7 @@ p, .body {
    Utility — frosted header (used throughout the app)
    ============================================================ */
 .frosted {
-  background: rgba(242, 242, 247, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.6) blur(20px);
+  -webkit-backdrop-filter: saturate(1.6) blur(20px);
 }

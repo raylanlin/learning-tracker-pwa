@@ -1,17 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="100" fill="#007aff"/>
-  <rect x="120" y="100" width="272" height="312" rx="20" fill="#fff"/>
-  <rect x="140" y="130" width="120" height="12" rx="6" fill="#007aff"/>
-  <rect x="140" y="160" width="200" height="8" rx="4" fill="#e5e5ea"/>
-  <rect x="140" y="185" width="180" height="8" rx="4" fill="#e5e5ea"/>
-  <rect x="140" y="210" width="160" height="8" rx="4" fill="#e5e5ea"/>
-  <rect x="140" y="235" width="200" height="8" rx="4" fill="#e5e5ea"/>
-  <rect x="140" y="270" width="100" height="60" rx="12" fill="#34c759"/>
-  <circle cx="170" cy="300" r="15" fill="#fff"/>
-  <path d="M162 300 l6 6 l12 -12" stroke="#34c759" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <rect x="260" y="270" width="100" height="60" rx="12" fill="#ffcc00"/>
-  <circle cx="290" cy="300" r="15" fill="#fff"/>
-  <rect x="310" y="294" width="20" height="12" rx="6" fill="#ffcc00"/>
-  <rect x="140" y="355" width="200" height="8" rx="4" fill="#e5e5ea"/>
-  <rect x="140" y="375" width="140" height="8" rx="4" fill="#e5e5ea"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a8bff"></stop>
+      <stop offset="1" stop-color="#2d5fe0"></stop>
+    </linearGradient>
+    <linearGradient id="done" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4fd98a"></stop>
+      <stop offset="1" stop-color="#2fa35f"></stop>
+    </linearGradient>
+    <linearGradient id="today" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd658"></stop>
+      <stop offset="1" stop-color="#f0a820"></stop>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-opacity="0.18"></feDropShadow>
+    </filter>
+  </defs>
+
+  
+  <rect width="512" height="512" rx="112" fill="url(#bg)"></rect>
+
+  
+  <g filter="url(#shadow)" transform="translate(96 128)">
+    
+    <rect x="0" y="0" width="96" height="96" rx="22" fill="url(#done)"></rect>
+    <rect x="112" y="0" width="96" height="96" rx="22" fill="url(#done)"></rect>
+    <rect x="224" y="0" width="96" height="96" rx="22" fill="url(#done)"></rect>
+    
+    <rect x="0" y="112" width="96" height="96" rx="22" fill="url(#done)"></rect>
+    <rect x="112" y="112" width="96" height="96" rx="22" fill="url(#today)"></rect>
+    <rect x="224" y="112" width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.22"></rect>
+    
+    <rect x="0" y="224" width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.22"></rect>
+    <rect x="112" y="224" width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.22"></rect>
+    <rect x="224" y="224" width="96" height="96" rx="22" fill="#ffffff" fill-opacity="0.22"></rect>
+  </g>
+
+  
+  <path d="M130 178 L162 210 L220 148" stroke="#ffffff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
 </svg>
