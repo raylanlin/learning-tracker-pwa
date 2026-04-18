@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Neutrals</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: var(--shadow-card);
+  }
+  .n-swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .n-chip {
+    width: 100%;
+    height: 64px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .n-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg1);
+  }
+  .n-hex {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--fg2);
+  }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="scale">
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#f2f2f7"></div>
+      <div class="n-name">bg</div>
+      <div class="n-hex">#F2F2F7</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#ffffff"></div>
+      <div class="n-name">card</div>
+      <div class="n-hex">#FFFFFF</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#e5e5ea"></div>
+      <div class="n-name">border</div>
+      <div class="n-hex">#E5E5EA</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#d1d1d6"></div>
+      <div class="n-name">gray</div>
+      <div class="n-hex">#D1D1D6</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#8e8e93"></div>
+      <div class="n-name">fg2</div>
+      <div class="n-hex">#8E8E93</div>
+    </div>
+    <div class="n-swatch">
+      <div class="n-chip" style="background:#1c1c1e"></div>
+      <div class="n-name">fg1</div>
+      <div class="n-hex">#1C1C1E</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

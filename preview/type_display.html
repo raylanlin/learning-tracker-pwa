@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Display Type</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .specimen {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .display {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--fg1);
+  }
+  .spec-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    color: var(--fg2);
+    font-size: 11px;
+  }
+  .spec-row .dot { color: #d1d1d6; }
+  .mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="specimen">
+    <div class="display">学习追踪 · Learning Tracker</div>
+    <div class="spec-row">
+      <span class="mono">28 / 32</span>
+      <span class="dot">·</span>
+      <span>Black 800</span>
+      <span class="dot">·</span>
+      <span>−1% tracking</span>
+      <span class="dot">·</span>
+      <span>SF Pro Text / PingFang SC</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

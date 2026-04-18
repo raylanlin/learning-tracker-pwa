@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Sync Status</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .wrap { background: #fff; border-radius: 16px; padding: 20px; box-shadow: var(--shadow-card); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; }
+  .pill { font-size: 10px; padding: 3px 8px; border-radius: 8px; background: #fff; color: #8e8e93; box-shadow: 0 1px 6px rgba(0,0,0,0.08); font-weight: 600; }
+  .pill.sync { color: #007aff; }
+  .pill.err { color: #ff3b30; }
+  .pill.off { color: #ff9500; }
+  .pill.ok { color: #8e8e93; }
+  .cap { font-size: 11px; color: var(--fg2); text-align: center; width: 100%; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="wrap">
+    <span class="pill ok">● 在线</span>
+    <span class="pill sync">⏳ 同步中…</span>
+    <span class="pill ok">● 已同步</span>
+    <span class="pill err">⚠ 同步失败</span>
+    <span class="pill off">○ 离线</span>
+    <div class="cap">Sync status pill · fixed top-right · mini shadow</div>
+  </div>
+</div>
+</body>
+</html>

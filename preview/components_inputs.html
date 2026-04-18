@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Inputs</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .wrap { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-card); display:flex; flex-direction: column; gap: 12px; }
+  input { width: 100%; border: 1.5px solid #e5e5ea; border-radius: 14px; padding: 14px 16px; font-size: 16px; background: #f2f2f7; outline: none; font-family: inherit; box-sizing: border-box; color: #1c1c1e; }
+  input.focus { border-color: #007aff; background: #fff; }
+  .meta { font-size: 11px; color: var(--fg2); font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="wrap">
+    <input placeholder="账号" value="" />
+    <div class="meta">idle · 1.5 border · bg #f2f2f7</div>
+    <input placeholder="任务名称…" value="阅读英文原版" class="focus" />
+    <div class="meta">focused · border #007AFF · 0.2s transition</div>
+  </div>
+</div>
+</body>
+</html>

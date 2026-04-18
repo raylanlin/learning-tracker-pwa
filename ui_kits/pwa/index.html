@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>学习追踪器 · UI Kit</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="Header.jsx"></script>
+<script type="text/babel" src="TabBar.jsx"></script>
+<script type="text/babel" src="Calendar.jsx"></script>
+<script type="text/babel" src="PlanList.jsx"></script>
+<script type="text/babel" src="TaskCard.jsx"></script>
+<script type="text/babel" src="Chrome.jsx"></script>
+
+<script type="text/babel">
+const TARGET = 30;
+const GRID = 60;
+const mkCells = (doneN = 0, todayN = 0) => Array(GRID).fill(null).map((_, i) => ({
+  done: i < doneN,
+  doneToday: i >= doneN - todayN && i < doneN,
+}));
+
+const today = '2025-04-18';
+
+function App() {
+  const [authed, setAuthed] = React.useState(false);
+  const [tab, setTab] = React.useState('calendar');
+  const [year, setYear] = React.useState(2025);
+  const [month, setMonth] = React.useState(3); // April (0-indexed)
+  const [selected, setSelected] = React.useState(today);
+  const [modal, setModal] = React.useState(null); // {mode, taskId?}
+
+  const [plans, setPlans] = React.useState({
+    '2025-04-14': [{ id: 'a', name: '背 30 个单词', done: true }],
+    '2025-04-16': [{ id: 'b', name: '练琴', done: true }, { id: 'c', name: '做一道 leetcode', done: true }],
+    '2025-04-17': [{ id: 'd', name: '读一章', done: true }],
+    '2025-04-18': [
+      { id: 'e', name: '背 50 个单词', done: true },
+      { id: 'f', name: '练习钢琴 30 分钟', done: false },
+      { id: 'g', name: '复习数学笔记', done: false },
+    ],
+  });
+
+  const [tasks, setTasks] = React.useState([
+    {
+      id: 't1', name: '阅读英文原版',
+      subtasks: [
+        { name: '第一章', cells: mkCells(22, 2) },
+        { name: '第二章', cells: mkCells(8, 1) },
+      ],
+    },
+    {
+      id: 't2', name: '钢琴练习',
+      subtasks: [
+        { name: '音阶', cells: mkCells(35, 0) }, // includes bonus
+      ],
+    },
+    {
+      id: 't3', name: '每日冥想',
+      subtasks: [
+        { name: '10 分钟静坐', cells: mkCells(15, 1) },
+      ],
+    },
+  ]);
+  const [openCards, setOpenCards] = React.useState({ t1: true });
+
+  const dotDates = React.useMemo(() => {
+    const s = new Set();
+    Object.keys(plans).forEach(d => { if (plans[d].some(p => p.done)) s.add(d); });
+    return s;
+  }, [plans]);
+
+  const prev = () => { let m = month - 1, y = year; if (m < 0) { m = 11; y--; } setMonth(m); setYear(y); };
+  const next = () => { let m = month + 1, y = year; if (m > 11) { m = 0; y++; } setMonth(m); setYear(y); };
+
+  const togglePlan = (i) => {
+    setPlans(p => ({ ...p, [selected]: p[selected].map((t, idx) => idx === i ? { ...t, done: !t.done } : t) }));
+  };
+  const deletePlan = (i) => {
+    setPlans(p => {
+      const next = { ...p };
+      next[selected] = next[selected].filter((_, idx) => idx !== i);
+      if (next[selected].length === 0) delete next[selected];
+      return next;
+    });
+  };
+  const addPlan = (name) => {
+    setPlans(p => ({ ...p, [selected]: [...(p[selected] || []), { id: String(Date.now()), name, done: false }] }));
+    setModal(null);
+  };
+
+  const addTask = (name) => {
+    setTasks(t => [...t, { id: String(Date.now()), name, subtasks: [] }]);
+    setModal(null);
+  };
+  const addSubtask = (taskId, name) => {
+    setTasks(ts => ts.map(t => t.id === taskId ? { ...t, subtasks: [...t.subtasks, { name, cells: mkCells(0) }] } : t));
+    setModal(null);
+  };
+  const addProgress = (taskId, si) => {
+    setTasks(ts => ts.map(t => {
+      if (t.id !== taskId) return t;
+      const subs = t.subtasks.map((st, i) => {
+        if (i !== si) return st;
+        const cells = [...st.cells];
+        for (let j = 0; j < cells.length; j++) {
+          if (!cells[j].done) { cells[j] = { done: true, doneToday: true }; break; }
+        }
+        return { ...st, cells };
+      });
+      return { ...t, subtasks: subs };
+    }));
+  };
+  const deleteTask = (taskId) => setTasks(ts => ts.filter(t => t.id !== taskId));
+  const deleteSubtask = (taskId, si) => setTasks(ts => ts.map(t => t.id === taskId ? { ...t, subtasks: t.subtasks.filter((_, i) => i !== si) } : t));
+
+  if (!authed) return <AuthScreen onLogin={() => setAuthed(true)} />;
+
+  return (
+    <>
+      <Header dateLabel="4月18日 周五" syncState="online" />
+      <TabBar active={tab} onChange={setTab} />
+      <div className="container">
+        {tab === 'calendar' && (
+          <>
+            <Calendar
+              year={year} month={month} today={today} selected={selected}
+              dotDates={dotDates}
+              onPrev={prev} onNext={next} onSelect={setSelected}
+            />
+            <PlanList
+              date={selected}
+              items={plans[selected] || []}
+              onToggle={togglePlan}
+              onDelete={deletePlan}
+              onAdd={() => setModal({ mode: 'plan' })}
+            />
+          </>
+        )}
+        {tab === 'grid' && (
+          <div>
+            {tasks.map(t => (
+              <TaskCard
+                key={t.id}
+                task={t}
+                open={!!openCards[t.id]}
+                onToggle={() => setOpenCards(s => ({ ...s, [t.id]: !s[t.id] }))}
+                onAddSubtask={() => setModal({ mode: 'subtask', taskId: t.id })}
+                onAddProgress={(si) => addProgress(t.id, si)}
+                onDeleteTask={() => deleteTask(t.id)}
+                onDeleteSubtask={(si) => deleteSubtask(t.id, si)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <Fab
+        label={tab === 'calendar' ? '添加计划' : '添加任务'}
+        onClick={() => setModal({ mode: tab === 'calendar' ? 'plan' : 'task' })}
+      />
+      <Modal
+        open={!!modal}
+        title={modal?.mode === 'plan' ? '添加计划' : modal?.mode === 'subtask' ? '添加子任务' : '新建任务'}
+        placeholder={modal?.mode === 'plan' ? '输入今天的计划…' : modal?.mode === 'subtask' ? '子任务名称…' : '任务名称…'}
+        onCancel={() => setModal(null)}
+        onConfirm={(v) => {
+          if (modal.mode === 'plan') addPlan(v);
+          else if (modal.mode === 'task') addTask(v);
+          else if (modal.mode === 'subtask') addSubtask(modal.taskId, v);
+        }}
+      />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Task List Row</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .wrap { background: #fff; border-radius: 16px; box-shadow: var(--shadow-card); overflow: hidden; }
+  .header { padding: 14px 16px; border-bottom: 1px solid #e5e5ea; font-size: 15px; font-weight: 600; color:#1c1c1e; }
+  .row { padding: 12px 16px; border-bottom: 1px solid #e5e5ea; display: flex; align-items: center; gap: 12px; }
+  .row:last-of-type { border-bottom: none; }
+  .row input[type="checkbox"] { width: 20px; height: 20px; accent-color: #007aff; margin: 0; }
+  .name { font-size: 15px; font-weight: 600; color:#1c1c1e; flex: 1; }
+  .name.done { color: #8e8e93; text-decoration: line-through; }
+  .del { width: 28px; height: 28px; border-radius: 50%; border: none; background: #ff3b30; color: #fff; font-size: 16px; opacity: 0.7; }
+  .add { display:block; width: 100%; padding: 12px; background: #f2f2f7; border: none; border-top: 1px solid #e5e5ea; color: #007aff; font-size: 14px; font-weight: 600; font-family: inherit; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="wrap">
+    <div class="header">4月18日 周五 · 计划</div>
+    <div class="row"><input type="checkbox" checked /><span class="name done">背 50 个单词</span><button class="del">×</button></div>
+    <div class="row"><input type="checkbox" /><span class="name">练习钢琴 30 分钟</span><button class="del">×</button></div>
+    <div class="row"><input type="checkbox" /><span class="name">复习数学笔记</span><button class="del">×</button></div>
+    <button class="add">+ 添加计划</button>
+  </div>
+</div>
+</body>
+</html>

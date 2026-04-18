@@ -1,0 +1,166 @@
+/* ============================================================
+   Learning Tracker — Colors & Type
+   Source of truth for color and typography tokens.
+   Extracted directly from source/original_index.html.
+   ============================================================ */
+
+:root {
+  /* ── Surface & Text ── */
+  --bg:              #f2f2f7;   /* page background (iOS systemGroupedBackground) */
+  --card:            #ffffff;   /* cards, modals, sheets */
+  --border:          #e5e5ea;   /* hairline dividers */
+  --gray:            #d1d1d6;   /* neutral fill / disabled / pending cell */
+  --text-primary:    #1c1c1e;   /* primary text */
+  --text-secondary:  #8e8e93;   /* secondary / caption text */
+
+  /* ── Semantic / Accent (iOS system colors) ── */
+  --accent:          #007aff;   /* blue — primary action, links, today */
+  --green:           #34c759;   /* complete / success */
+  --yellow:          #ffcc00;   /* today / in-progress / selected */
+  --purple:          #af52de;   /* bonus / beyond target */
+  --red:             #ff3b30;   /* destructive / error */
+  --orange:          #ff9500;   /* offline / warning */
+
+  /* ── Foreground aliases ── */
+  --fg1: var(--text-primary);
+  --fg2: var(--text-secondary);
+  --bg1: var(--bg);
+  --bg2: var(--card);
+
+  /* ── Shadows & Radii ── */
+  --shadow-card:    0 2px 12px rgba(0, 0, 0, 0.08);
+  --shadow-fab:     0 4px 20px rgba(0, 122, 255, 0.4);
+  --shadow-mini:    0 1px 6px rgba(0, 0, 0, 0.08);
+  --focus-ring-today: 0 0 0 3px rgba(255, 204, 0, 0.35);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;    /* default card radius (--radius in original) */
+  --radius-xl: 20px;    /* modal */
+  --radius-2xl: 24px;   /* auth card, fab */
+  --radius-pill: 999px;
+
+  /* ── Spacing scale (based on 4px grid) ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  /* ── Typography ── */
+  /* System stack used throughout — Apple SF on iOS/macOS, PingFang SC for CJK */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC',
+               'Helvetica Neue', Arial, sans-serif;
+
+  /* Type scale */
+  --fs-11: 11px;   /* micro labels (user badge, legend) */
+  --fs-12: 12px;   /* captions, weekdays, backup buttons */
+  --fs-13: 13px;   /* header date, error */
+  --fs-14: 14px;   /* tab label, hint, buttons */
+  --fs-15: 15px;   /* calendar day, subtask title, sheet body */
+  --fs-16: 16px;   /* inputs, primary buttons */
+  --fs-17: 17px;   /* task title */
+  --fs-18: 18px;   /* modal h2 / section title */
+  --fs-22: 22px;   /* app header h1 */
+  --fs-28: 28px;   /* auth h1 (display) */
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold: 600;
+  --fw-bold:    700;
+  --fw-black:   800;
+
+  --lh-tight:  1.1;
+  --lh-snug:   1.25;
+  --lh-normal: 1.4;
+
+  /* ── Motion ── */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast:   0.15s;
+  --dur-base:   0.2s;
+  --dur-slow:   0.35s;
+
+  /* ── Layout ── */
+  --content-max: 520px;     /* phone-centric max content width */
+  --tap-min: 44px;          /* iOS HIG minimum hit target */
+}
+
+/* ============================================================
+   Semantic element styles
+   Use these as a baseline; override per component where needed.
+   ============================================================ */
+
+html, body {
+  font-family: var(--font-sans);
+  color: var(--fg1);
+  background: var(--bg1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 {
+  font-size: var(--fs-28);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+}
+
+h2, .h2 {
+  font-size: var(--fs-22);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+}
+
+h3, .h3 {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+}
+
+h4, .h4 {
+  font-size: var(--fs-17);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+p, .body {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+}
+
+.caption {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-semibold);
+  color: var(--fg2);
+}
+
+.micro {
+  font-size: var(--fs-11);
+  font-weight: var(--fw-semibold);
+  color: var(--fg2);
+}
+
+.meta {
+  font-size: var(--fs-13);
+  color: var(--fg2);
+  font-weight: var(--fw-medium);
+}
+
+.mono, code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.95em;
+}
+
+/* ============================================================
+   Utility — frosted header (used throughout the app)
+   ============================================================ */
+.frosted {
+  background: rgba(242, 242, 247, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}

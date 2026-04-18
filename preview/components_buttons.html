@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Buttons</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .wrap { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; gap: 16px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .primary { border: none; border-radius: 14px; padding: 14px 20px; font-size: 16px; font-weight: 700; background: #007aff; color: #fff; font-family: inherit; }
+  .confirm { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; background: #007aff; color:#fff; font-family: inherit; }
+  .cancel { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; background: #f2f2f7; color: #1c1c1e; font-family: inherit; }
+  .backup { display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px; border-radius: 8px; border: 1.5px solid #e5e5ea; background: #fff; font-size: 12px; font-weight: 600; font-family: inherit; }
+  .backup.export { color: #007aff; border-color: #007aff; }
+  .backup.import { color: #34c759; border-color: #34c759; }
+  .del { background: none; border: none; color: #ff3b30; font-size: 13px; padding: 8px; font-family: inherit; }
+  .tag { font-size: 10px; color: var(--fg2); font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="wrap">
+    <div class="row">
+      <button class="primary">登录</button>
+      <span class="tag">primary · 14 / 14 pad · r14 · 700</span>
+    </div>
+    <div class="row">
+      <button class="cancel">取消</button>
+      <button class="confirm">确认</button>
+      <span class="tag">modal btns · r12 · 600</span>
+    </div>
+    <div class="row">
+      <button class="backup export">↑ 导出</button>
+      <button class="backup import">↓ 导入</button>
+      <span class="tag">pill · 1.5 border · 12 fs</span>
+    </div>
+    <div class="row">
+      <button class="del">删除任务</button>
+      <span class="tag">destructive text · red</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Voice & Tone</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .wrap { background: #fff; border-radius: 16px; padding: 20px 24px; box-shadow: var(--shadow-card); display:flex; flex-direction: column; gap: 14px; }
+  .line { display: grid; grid-template-columns: 120px 1fr; gap: 14px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px solid #e5e5ea; }
+  .line:last-child { border: none; padding: 0; }
+  .k { font-size: 11px; color: #8e8e93; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .v { color: #1c1c1e; font-size: 15px; }
+  .meta { color: #8e8e93; font-size: 12px; margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="wrap">
+    <div class="line"><span class="k">Tab</span><div><div class="v">📅 日历 · 🔲 网格</div><div class="meta">1–2 chars, emoji prefix</div></div></div>
+    <div class="line"><span class="k">Button</span><div><div class="v">登录 · 确认 · 取消 · 删除任务</div><div class="meta">verb / noun phrase, no punctuation</div></div></div>
+    <div class="line"><span class="k">Placeholder</span><div><div class="v">任务名称… · 输入今天的计划…</div><div class="meta">ends with …</div></div></div>
+    <div class="line"><span class="k">Confirm</span><div><div class="v">确定删除这个任务？</div><div class="meta">terse question, 全角 ？</div></div></div>
+    <div class="line"><span class="k">Status</span><div><div class="v">● 在线 · ⏳ 同步中… · ⚠ 同步失败</div><div class="meta">symbol + short phrase</div></div></div>
+    <div class="line"><span class="k">Empty</span><div><div class="v">还没有任务 · 今天还没有计划</div><div class="meta">warm, lightly hopeful</div></div></div>
+    <div class="line"><span class="k">Error</span><div><div class="v">密码错误 · 账号不存在</div><div class="meta">literal, no apology</div></div></div>
+  </div>
+</div>
+</body>
+</html>

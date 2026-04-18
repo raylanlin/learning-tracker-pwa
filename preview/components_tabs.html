@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Tab Bar</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .tab-bar { display: flex; background: #fff; border-radius: 12px; box-shadow: var(--shadow-card); overflow: hidden; }
+  .tab-btn { flex: 1; padding: 14px 0; border: none; background: transparent; font-size: 14px; font-weight: 600; color: #8e8e93; font-family: inherit; }
+  .tab-btn.active { background: #007aff; color: #fff; }
+  .cap { margin-top: 12px; font-size: 11px; color: var(--fg2); text-align: center; }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="tab-bar">
+    <button class="tab-btn active">📅 日历</button>
+    <button class="tab-btn">🔲 网格</button>
+  </div>
+  <div class="cap">Segmented tab bar · active fills with accent · inactive text fg2</div>
+</div>
+</body>
+</html>

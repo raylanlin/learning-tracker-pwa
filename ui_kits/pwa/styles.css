@@ -1,0 +1,168 @@
+/* ============================================================
+   UI Kit shared styles — Learning Tracker PWA
+   Lifted from source/original_index.html, condensed.
+   ============================================================ */
+
+:root {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --text-primary: #1c1c1e;
+  --text-secondary: #8e8e93;
+  --accent: #007aff;
+  --gray: #d1d1d6;
+  --green: #34c759;
+  --yellow: #ffcc00;
+  --purple: #af52de;
+  --red: #ff3b30;
+  --orange: #ff9500;
+  --border: #e5e5ea;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding-bottom: 80px;
+  overflow-x: hidden;
+}
+
+/* Header */
+header.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(242,242,247,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 16px 20px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.app-header h1 { font-size: 22px; font-weight: 700; }
+.header-date { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+
+.sync-status {
+  position: fixed; top: 70px; right: 16px; z-index: 150;
+  font-size: 10px; padding: 3px 8px; border-radius: 8px;
+  background: var(--card); color: var(--text-secondary);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08); font-weight: 600;
+}
+.sync-status.syncing { color: var(--accent); }
+
+/* Tab bar */
+.tab-bar {
+  display: flex; background: var(--card); border-radius: 12px;
+  margin: 12px 16px; box-shadow: var(--shadow); overflow: hidden;
+}
+.tab-btn {
+  flex: 1; padding: 10px 0; border: none; background: transparent;
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.tab-btn.active { background: var(--accent); color: #fff; }
+
+.container { max-width: 520px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* Calendar */
+.calendar-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+.calendar-header h2 { font-size: 18px; font-weight: 700; }
+.cal-nav { background: none; border: none; font-size: 20px; color: var(--accent); cursor: pointer; padding: 4px 12px; font-family: inherit; }
+.cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; color: var(--text-secondary); padding: 8px 0; font-weight: 600; }
+.cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; position: relative; transition: background 0.15s; }
+.cal-day:active { background: var(--gray); }
+.cal-day.other-month { color: var(--gray); }
+.cal-day.today { background: var(--accent); color: #fff; font-weight: 700; }
+.cal-day.selected { background: var(--yellow); color: var(--text-primary); }
+.cal-day .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); position: absolute; bottom: 4px; }
+.cal-day.today .dot { background: #fff; }
+
+/* Day detail / plan list */
+.day-detail { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-top: 16px; overflow: hidden; }
+.day-detail-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 600; }
+.add-session-btn { display: block; width: 100%; padding: 12px; background: var(--bg); border: none; border-top: 1px solid var(--border); color: var(--accent); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.calendar-task-item { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.calendar-task-checkbox { display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer; }
+.calendar-task-checkbox input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+.calendar-task-name { font-size: 15px; font-weight: 600; }
+.calendar-task-name.done { color: var(--text-secondary); text-decoration: line-through; }
+.calendar-task-delete { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--red); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0.7; line-height: 1; flex-shrink: 0; font-family: inherit; }
+
+/* Task cards */
+.task-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+.task-header { padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.task-header:active { opacity: 0.7; }
+.task-info { flex: 1; }
+.task-name { font-size: 17px; font-weight: 600; }
+.task-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+.progress-bar-wrap { width: 60px; height: 4px; background: var(--gray); border-radius: 2px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s ease; }
+.task-arrow { width: 20px; height: 20px; margin-left: 8px; transition: transform 0.25s ease; opacity: 0.4; }
+.task-card.open .task-arrow { transform: rotate(180deg); }
+.task-body { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+.task-card.open .task-body { max-height: 3000px; }
+.task-body-inner { padding: 4px 16px 16px; }
+
+/* Grid cells */
+.grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.cell { aspect-ratio: 1; border-radius: 12px; cursor: pointer; transition: transform 0.15s ease, background 0.2s ease; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
+.cell:active { transform: scale(0.92); }
+.cell.pending { background: var(--gray); color: var(--text-secondary); }
+.cell.done { background: var(--green); color: #fff; }
+.cell.today { background: var(--yellow); color: var(--text-primary); box-shadow: 0 0 0 3px rgba(255,204,0,0.35); }
+.cell.bonus { background: var(--purple); color: #fff; }
+
+/* Subtasks */
+.subtasks-section { margin-top: 16px; }
+.subtask-item { background: var(--bg); border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+.subtask-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 4px; }
+.subtask-name { font-size: 15px; font-weight: 600; flex: 1; }
+.subtask-meta { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.subtask-progress-wrap { width: 40px; height: 3px; background: var(--gray); border-radius: 2px; overflow: hidden; }
+.subtask-progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s ease; }
+.subtask-arrow { width: 16px; height: 16px; margin-left: 6px; transition: transform 0.25s ease; opacity: 0.4; }
+.subtask-item.open .subtask-arrow { transform: rotate(180deg); }
+.subtask-body { max-height: 0; overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+.subtask-item.open .subtask-body { max-height: 800px; }
+.subtask-body-inner { padding: 8px 0 0; }
+.subtask-body .grid { gap: 6px; }
+.subtask-body .cell { border-radius: 8px; font-size: 9px; }
+
+.delete-subtask-btn, .delete-task-btn { background: none; border: none; color: var(--red); font-size: 13px; cursor: pointer; padding: 8px 0; width: 100%; text-align: center; font-family: inherit; }
+.add-subtask-btn { display: block; width: 100%; padding: 10px; background: var(--bg); border: 1.5px dashed var(--border); border-radius: 12px; color: var(--accent); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; font-family: inherit; margin-top: 4px; }
+
+/* Legend */
+.legend { display: flex; gap: 14px; flex-wrap: wrap; padding: 10px 0; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* FAB */
+.fab-group { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 200; }
+.fab { border: none; border-radius: 24px; padding: 14px 28px; font-size: 16px; font-weight: 600; cursor: pointer; background: var(--accent); color: #fff; box-shadow: 0 4px 20px rgba(0,122,255,0.4); display: flex; align-items: center; gap: 6px; font-family: inherit; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+.modal { background: var(--card); border-radius: 20px; width: 100%; max-width: 340px; padding: 24px 20px 20px; transform: scale(0.92) translateY(10px); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.modal-overlay.show .modal { transform: scale(1) translateY(0); }
+.modal h2 { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 16px; }
+.modal input { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 16px; outline: none; transition: border-color 0.2s; background: var(--bg); margin-bottom: 10px; font-family: inherit; }
+.modal input:focus { border-color: var(--accent); }
+.modal-btns { display: flex; gap: 10px; margin-top: 6px; }
+.modal-btns button { flex: 1; padding: 12px; border-radius: 12px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-cancel { background: var(--bg); color: var(--text-primary); }
+.btn-confirm { background: var(--accent); color: #fff; }
+.empty-hint { text-align: center; padding: 60px 20px; color: var(--text-secondary); font-size: 15px; }
+.empty-hint span { display: block; font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+
+/* Auth */
+.auth-screen { position: fixed; inset: 0; z-index: 500; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; background: var(--bg); }
+.auth-card { background: var(--card); border-radius: 24px; padding: 40px 28px 28px; width: 100%; max-width: 340px; box-shadow: var(--shadow); text-align: center; }
+.auth-card h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+.auth-card p { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+.auth-card input { width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 16px; font-size: 16px; outline: none; background: var(--bg); margin-bottom: 14px; font-family: inherit; }
+.auth-card input:focus { border-color: var(--accent); }
+.auth-btn { width: 100%; border: none; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: 700; cursor: pointer; background: var(--accent); color: #fff; font-family: inherit; }
+.auth-hint { font-size: 12px; color: var(--text-secondary); margin-top: 12px; }
