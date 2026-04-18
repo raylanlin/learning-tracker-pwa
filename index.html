@@ -143,11 +143,6 @@
 
     /* ── User Menu ── */
     #userMenu { min-width: 180px; }
-    #userMenu.show { animation: menuSlideIn 0.25s var(--ease-spring) both; }
-    @keyframes menuSlideIn {
-      from { opacity: 0; transform: translateY(-6px) scale(0.96); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
     .menu-label {
       padding: 8px 12px 4px;
       font-size: 11px; font-weight: 600;
@@ -157,6 +152,8 @@
     .menu-divider {
       height: 1px; background: var(--border);
       margin: 4px 8px;
+    }
+    #userMenu.show .menu-divider {
       opacity: 0; animation: fadeIn 0.3s 0.15s both;
     }
     @keyframes fadeIn { to { opacity: 1; } }
@@ -165,8 +162,10 @@
       width: 100%; padding: 8px 12px; border: none; background: transparent;
       font-size: 13px; color: var(--text-primary); cursor: pointer;
       border-radius: 8px; text-align: left;
-      opacity: 0; animation: itemSlideIn 0.2s var(--ease-out) both;
       transition: background 0.15s;
+    }
+    #userMenu.show .menu-item {
+      opacity: 0; animation: itemSlideIn 0.2s var(--ease-out) both;
     }
     .menu-item:hover { background: var(--bg-elev); }
     .menu-item svg { width: 16px; height: 16px; flex-shrink: 0; }
@@ -177,10 +176,10 @@
       from { opacity: 0; transform: translateX(-6px); }
       to   { opacity: 1; transform: translateX(0); }
     }
-    .menu-item:nth-child(3) { animation-delay: 0.05s; }
-    .menu-item:nth-child(4) { animation-delay: 0.09s; }
-    .menu-item:nth-child(5) { animation-delay: 0.13s; }
-    .menu-item:nth-child(6) { animation-delay: 0.17s; }
+    #userMenu.show .menu-item:nth-child(3) { animation-delay: 0.05s; }
+    #userMenu.show .menu-item:nth-child(4) { animation-delay: 0.09s; }
+    #userMenu.show .menu-item:nth-child(5) { animation-delay: 0.13s; }
+    #userMenu.show .menu-item:nth-child(6) { animation-delay: 0.17s; }
     .menu-item:nth-child(7) { animation-delay: 0.21s; }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
