@@ -12,16 +12,16 @@
 
 :root {
   /* ── Neutrals ── */
-  --bg:            #f7f7f9;    /* page canvas */
-  --bg-elev:       #eceef2;    /* inset groups, inactive tabs, icon-btn bg */
+  --bg:            #fafafc;    /* page canvas — near-white */
+  --bg-elev:       #f2f2f7;    /* inset groups, inactive tabs, icon-btn bg */
   --card:          #ffffff;    /* cards, modals, sheets */
-  --border:        #ececf0;    /* hairline dividers */
-  --border-strong: #dcdce3;    /* input borders, pressed icon-btn */
+  --border:        #e8e8ed;    /* hairline dividers */
+  --border-strong: #d5d5dc;    /* input borders, pressed icon-btn */
 
   /* ── Text ── */
   --text-primary:   #1c1c1e;
-  --text-secondary: #8a8a92;
-  --text-tertiary:  #b4b4bc;
+  --text-secondary: #8e8e93;    /* iOS secondary label */
+  --text-tertiary:  #aeaeb2;
 
   /* ── Brand + accents (softer than raw iOS) ── */
   --accent:       #4a7dff;     /* primary blue */
@@ -42,7 +42,7 @@
 
   --orange:       #ef8a3d;     /* offline sync */
 
-  --cell-pending: #e9e9ee;     /* empty grid cell */
+  --cell-pending: #e5e5ea;     /* empty grid cell (iOS systemGroupedBackgroundInset) */
 
   /* ── Elevation ── */
   --shadow-sm:  0 1px 2px rgba(20, 20, 30, 0.04), 0 1px 1px rgba(20, 20, 30, 0.03);
@@ -102,10 +102,10 @@
   --fg2: var(--text-secondary);
   --bg1: var(--bg);
   --bg2: var(--card);
-  --gray: var(--border-strong);             /* was #d1d1d6 in v4 */
+  --gray: var(--border-strong);             /* was #d1d1d6 in v4, now #d5d5dc */
   --shadow-card: var(--shadow-md);
   --shadow-mini: var(--shadow-sm);
-  --focus-ring-today: 0 0 0 3px rgba(245, 183, 64, 0.35);
+  --focus-ring-today: 0 0 0 3px rgba(245, 183, 64, 0.40);
   --radius-sm:   var(--r-sm);
   --radius-md:   var(--r-md);
   --radius-lg:   var(--r-lg);
