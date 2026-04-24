@@ -1552,6 +1552,7 @@ function loadFromLocal() {
       tasks = local.tasks || [];
       sessions = local.sessions || {};
       calendarTasks = local.calendar_tasks || {};
+      countdowns = local.countdowns || [];
       return true;
     }
   } catch { /* ignore */ }
@@ -1570,9 +1571,10 @@ async function loadFromCloud({ silent = false } = {}) {
       tasks = row.tasks;
       sessions = row.sessions || {};
       calendarTasks = row.calendar_tasks || {};
+      countdowns = row.countdowns || [];
       // Mirror to local cache so next launch is instant.
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks }));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
       } catch {}
       // Re-render if the app has already mounted.
       if (_initialized) {
@@ -1594,7 +1596,7 @@ async function saveToCloud() {
   if (!user) return;
   setSyncStatus('syncing', '同步中');
   try {
-    await apiSaveData(user.id, { tasks, sessions, calendar_tasks: calendarTasks });
+    await apiSaveData(user.id, { tasks, sessions, calendar_tasks: calendarTasks, countdowns });
     setSyncStatus('online', '已同步');
   } catch (e) {
     console.error('Cloud save failed:', e);
@@ -1609,7 +1611,7 @@ function debouncedCloudSave() {
 
 function saveLocal() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
   } catch {}
   debouncedCloudSave();
 }
@@ -2602,6 +2604,10 @@ function loadCountdowns() {
 
 function saveCountdowns() {
   localStorage.setItem('lt_countdowns', JSON.stringify(countdowns));
+  // Also keep STORAGE_KEY in sync so cloud sync sees the latest.
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
+  } catch {}
 }
 
 function renderCountdown() {
