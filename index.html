@@ -1641,12 +1641,8 @@ function initApp() {
     document.getElementById('appHeader').classList.toggle('scrolled', window.scrollY > 4);
   }, { passive: true });
 
-  if ('serviceWorker' in navigator) {
     // Kill all old SWs and register fresh one (force clear stale cache)
-    navigator.serviceWorker.getRegistrations().then(regs => {
-      regs.forEach(r => r.unregister());
     }).finally(() => {
-      navigator.serviceWorker.register('./sw-new.js?v=11').catch(() => {});
     });
   }
 }
