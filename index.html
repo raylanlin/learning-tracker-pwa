@@ -1424,11 +1424,18 @@ async function apiLogin(email, password) {
 }
 
 async function apiLoadData(userId) {
-  const res = await fetch(API + '/learning_tracker_data?user_id=eq.' + userId + '&limit=1', {
+  const url = API + '/learning_tracker_data?user_id=eq.' + userId + '&limit=1';
+  const res = await fetch(url, {
     headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + sessionToken }
   });
-  if (!res.ok) throw new Error('Load failed');
+  console.log('[apiLoadData] status:', res.status, 'url:', url);
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[apiLoadData] error:', text);
+    throw new Error('Load failed: ' + res.status + ' ' + text);
+  }
   const data = await res.json();
+  console.log('[apiLoadData] rows:', data.length);
   return data[0] || null;
 }
 
