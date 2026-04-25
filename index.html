@@ -1641,10 +1641,6 @@ function initApp() {
     document.getElementById('appHeader').classList.toggle('scrolled', window.scrollY > 4);
   }, { passive: true });
 
-    // Kill all old SWs and register fresh one (force clear stale cache)
-    }).finally(() => {
-    });
-  }
 }
 
 // ── Utils ──
