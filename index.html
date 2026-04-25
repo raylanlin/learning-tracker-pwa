@@ -1575,6 +1575,7 @@ async function loadFromCloud({ silent = false } = {}) {
       // Mirror to local cache so next launch is instant.
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
+        localStorage.setItem('lt_countdowns', JSON.stringify(countdowns));
       } catch {}
       // Re-render if the app has already mounted.
       if (_initialized) {
@@ -2604,10 +2605,7 @@ function loadCountdowns() {
 
 function saveCountdowns() {
   localStorage.setItem('lt_countdowns', JSON.stringify(countdowns));
-  // Also keep STORAGE_KEY in sync so cloud sync sees the latest.
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
-  } catch {}
+  saveLocal();
 }
 
 function renderCountdown() {
