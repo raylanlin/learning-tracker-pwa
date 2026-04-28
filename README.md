@@ -1,199 +1,179 @@
-# Learning Tracker — Design System
+<p align="center">
+  <img src="assets/banner.png" alt="Learning Tracker Banner" width="100%" />
+</p>
 
-A compact iOS-native aesthetic for a bilingual (Chinese-first) personal learning tracker PWA. The app helps users plan daily study tasks on a calendar and visualise progress on a 60-cell grid where each cell is one completed session toward a 30-session target.
+<h1 align="center">Learning Tracker · 学习追踪器</h1>
 
-## Sources
+<p align="center">
+  <strong>个人学习进度追踪应用 / Personal Learning Progress Tracker</strong>
+</p>
 
-- **Codebase:** `raylanlin/learning-tracker-pwa` (GitHub, `master` branch). Current state of the app is `index.html` at repo root (v5 polish — single-file HTML + CSS + JS, Supabase for sync, service worker for offline shell).
-- **Live URL:** Netlify-hosted, not public. The app is PWA-installable.
-- **No Figma file provided.**
+<p align="center">
+  <a href="#features--功能特性">功能</a>
+  ·
+  <a href="#screenshots--界面截图">界面</a>
+  ·
+  <a href="#tech-stack--技术栈">技术栈</a>
+  ·
+  <a href="#usage--使用方法">使用</a>
+  ·
+  <a href="#project-structure--项目结构">结构</a>
+  ·
+  <a href="#development--开发">开发</a>
+</p>
 
-## Products represented
-
-There is **one product**: a mobile-first PWA (`学习追踪器` / "Learning Tracker"). It is a single-page HTML app that works standalone on iOS/Android via manifest.json, with Supabase (REST) for cross-device sync. There is no marketing site, no docs, no native client — the PWA is the whole surface.
-
-Core surfaces:
-- **Auth** — username + password login (two hard-coded accounts mapped to Supabase emails)
-- **Calendar tab** — month view with dots for days that have sessions or completed plans; tapping a day reveals its plan list. Carry-forward card surfaces yesterday's unfinished plans.
-- **Grid tab** — list of tasks, each expanding to subtasks rendered as a 5×12 grid of 60 cells (30 target + 30 bonus). Quick-chip buttons add +1 / +5 / +10 at once. Per-task color swatches.
-- **Stats tab** — 13-week GitHub-style activity heatmap, per-task ranking bars, lifetime-cell milestones strip, and a streak / today / total KPI hero.
-- **Modals** — new task / subtask / calendar plan (single text input + confirm)
-- **FAB** — floating "add" pill, context-aware (`添加任务` on grid, `添加计划` on calendar, hidden on stats)
-- **Header controls** — sync-status pill · theme switcher (auto / light / dark) · account button (initial letter badge, opens logout menu)
+<p align="center">
+  <img src="https://img.shields.io/badge/PWA-Installable-4a7dff?style=flat-square&logo=pwa" alt="PWA" />
+  <img src="https://img.shields.io/badge/iOS%20%7C%20Android-Cross--Platform-3ec177?style=flat-square" alt="Platform" />
+  <img src="https://img.shields.io/badge/Supabase-Cloud%20Sync-a668e0?style=flat-square&logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Offline--First-Service%20Worker-f5b740?style=flat-square" alt="Offline" />
+  <img src="https://img.shields.io/badge/v5-Polished-4a7dff?style=flat-square" alt="Version" />
+</p>
 
 ---
 
-## Index
+## ✨ Features · 功能特性
 
-| File | Purpose |
+| Emoji | 中文 | English |
+|:---:|---|---|
+| 📅 | **日历视图** — 月历展示每日学习计划和完成情况，支持添加每日计划 | **Calendar View** — Monthly calendar showing daily study plans and completion, supports adding daily plans |
+| 🔲 | **60 格进度网格** — 每个任务 5×12 网格，30 个目标 + 30 个超额，一键 +1/+5/+10 | **60-Cell Progress Grid** — 5×12 grid per task, 30 target + 30 bonus cells, quick-add +1/+5/+10 |
+| 📊 | **活动热力图** — 13 周 GitHub 风格热力图，直观展示学习活跃度 | **Activity Heatmap** — 13-week GitHub-style heatmap for visualizing learning activity |
+| 🔥 | **Streak 统计** — 连续打卡天数、今日完成数、累计完成数 | **Streak Stats** — Consecutive day streaks, today's completions, lifetime totals |
+| ☁️ | **Supabase 云同步** — 多设备数据实时同步 | **Supabase Cloud Sync** — Real-time cross-device data synchronization |
+| 📴 | **PWA 离线支持** — Service Worker 离线壳，无网络也能查看数据 | **PWA Offline Support** — Service Worker offline shell, accessible without network |
+| 🌗 | **深色/浅色主题** — 自动跟随系统或手动切换 | **Dark/Light Theme** — Auto-follow system or manual toggle |
+
+---
+
+## 📱 Screenshots · 界面截图
+
+> **iOS 风格设计系统** / iOS-style design system — 扁平化卡片、柔和配色、系统字体
+> Flat cards, muted palette, system fonts
+
+<p align="center">
+  <em>日历视图 · Calendar</em> &nbsp;&nbsp;|&nbsp;&nbsp; <em>进度网格 · Grid</em> &nbsp;&nbsp;|&nbsp;&nbsp; <em>统计面板 · Stats</em>
+</p>
+
+---
+
+## 🛠 Tech Stack · 技术栈
+
+| 层级 / Layer | 技术 / Technology | 说明 / Description |
+|---|---|---|
+| **前端 / Frontend** | HTML + CSS + JS (单文件) | Single-file SPA, no framework dependency |
+| **PWA** | Manifest + Service Worker | Installable, offline-first shell |
+| **后端 / Backend** | Supabase (REST API) | Cloud storage + cross-device sync |
+| **设计 / Design** | iOS System Grouped | 仿 iOS 设置页风格 / iOS Settings-style |
+| **主题 / Theme** | Auto / Light / Dark | 系统跟随 / System-following |
+
+---
+
+## 🚀 Usage · 使用方法
+
+### 本地运行 / Run Locally
+
+```bash
+# 克隆仓库 / Clone the repo
+git clone https://github.com/raylanlin/learning-tracker-pwa.git
+cd learning-tracker-pwa
+
+# 直接用浏览器打开 index.html，或使用任意静态服务器
+# Open index.html in a browser, or use any static server
+npx serve .
+```
+
+### 部署 / Deploy
+
+本项目可部署到任意静态托管平台 / Deployable to any static hosting:
+
+| 平台 / Platform | 方式 / Method |
 |---|---|
-| `README.md` | This file. High-level context, content & visual foundations, iconography. |
-| `colors_and_type.css` | All CSS variables — colors, type scale, shadows, radii, motion. v5 tokens + v4 legacy aliases. |
-| `SKILL.md` | Cross-compatible skill manifest so the system can be loaded by Claude Code. |
-| `index.html` | The canonical running app — v5 polish. All HTML + CSS + JS in one file. |
-| `manifest.json`, `sw.js` | PWA manifest and service worker (install + offline shell). |
-| `assets/` | Logos, icons, illustrations. `icon-512.svg` is the installable PWA icon. |
-| `preview/` | Swatches, type specimens, component cards rendered as static HTML for the Design System tab. |
-| `ui_kits/pwa/` | **v4** React recreation of the PWA (pixel-faithful to the original iOS palette, pre-v5 polish). No v5 UI kit yet. |
+| **GitHub Pages** | Settings → Pages → Source: main branch |
+| **Netlify** | 拖拽文件夹或 `netlify deploy --prod --dir=.` |
+| **Vercel** | 连接仓库自动部署 / Connect repo for auto-deploy |
+
+### 配置 Supabase / Configure Supabase
+
+在 `index.html` 中替换 Supabase 凭据 / Replace Supabase credentials in `index.html`:
+
+```javascript
+const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co'
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY'
+```
 
 ---
 
-## Content fundamentals
+## 📂 Project Structure · 项目结构
 
-**Language.** All user-facing copy is **Simplified Chinese (zh-CN)**. There is no English in the UI; no i18n layer. Treat zh-CN as canonical.
-
-**Voice.** Terse, functional, affectionate-adjacent — a personal tool, not a product pitched at strangers.
-
-- Labels are **1–4 characters** wherever possible: `日历` (Calendar), `网格` (Grid), `登录` (Login), `取消` / `确认` (Cancel / Confirm), `删除任务` (Delete task).
-- Buttons and tabs use a **noun or verb phrase, no terminal punctuation**.
-- Placeholders use an **ellipsis** to signal open-endedness: `任务名称…`, `输入今天的计划…`, `账号`, `密码`.
-- Confirmations are short questions with trailing `？`: `确定删除这个任务？`.
-- Status strings are **prefix-symbol + short phrase**: `● 在线`, `⏳ 同步中…`, `⚠ 同步失败`, `○ 离线`, `● 已同步`.
-- Empty states lean warm and lightly playful: `还没有任务` + `点击下方按钮添加一个`, `今天还没有计划`.
-- Auth hint uses an emoji as a soft reassurance: `数据将安全保存在云端 ☁️`.
-- Legends explain tersely: `未完成`, `已完成`, `今日`, `超额（>30）`.
-
-**Pronouns & tone.** No `你` / `您` — the app never addresses the user directly. It refers to *things* (tasks, plans, days), not *you*. This matches the diary / dashboard register: the user is the subject, the app is the notebook.
-
-**Numerals & dates.** Dates are rendered in mixed format: `2025年4月` for month headers, `4月18日 周五` for inline day labels (`周` + single-char weekday). Progress is `N / 30` always. Weekday headers are single-char `日 一 二 三 四 五 六`.
-
-**Emoji usage.** Sparingly, as **functional glyphs, never decoration**:
-- Tab labels (`📅 日历`, `🔲 网格`)
-- Status (`☁️` in auth hint, `📚` as the only-empty-state illustration)
-- Warm-sign only, never in section titles or buttons.
-
-**Punctuation.** Full-width `、` `，` `。` `？` when they appear in sentences. Interpunct `·` as a separator (`4月18日 · 计划`). ASCII `/` for ratios (`12 / 30`). Ellipsis `…` (single-char, not three dots).
-
-**Error copy.** Blunt and literal: `账号不存在`, `密码错误`, `请输入账号和密码`. No apology, no "please try again later".
+```
+learning-tracker-pwa/
+├── index.html              # 主应用（v5）/ Main app (v5) — all HTML + CSS + JS
+├── colors_and_type.css     # CSS 变量：颜色、字体、阴影、圆角 / Design tokens
+├── manifest.json           # PWA 配置 / PWA manifest
+├── sw.js                   # Service Worker / 离线壳 / Offline shell
+├── SKILL.md                # Claude Code 技能清单 / Skill manifest
+├── assets/                 # 图标和横幅 / Icons & banner
+│   ├── banner.png          # GitHub README 横幅 / README banner
+│   └── icon-512.svg        # PWA 安装图标 / PWA install icon
+├── preview/                # 静态预览页面 / Static preview pages
+├── release/                # 发布版本 / Release builds
+├── source/                 # 源代码 / Source files
+├── ui_kits/pwa/            # v4 React 复刻版 / v4 React recreation
+├── icon-192.png            # PWA 192px 图标
+├── icon-512.png            # PWA 512px 图标
+├── apple-touch-icon.png    # iOS 主屏幕图标
+└── README.md               # 本文件 / This file
+```
 
 ---
 
-## Visual foundations
+## 💡 Design System · 设计系统
 
-**Aesthetic family.** iOS 16-era "systemGroupedBackground" look, softened. v5 pulled the palette one notch off raw iOS system colors — blues, greens, yellows, purples, oranges all slightly desaturated — to reduce the candy-bright feel on modern high-DPI screens. Still flat, still card-on-gray, still SF-first. No gradients. No glassmorphism except a single frosted header. No illustrations beyond emoji. Added in v5: a full dark theme and an explicit `auto / light / dark` switch.
+本项目采用 **iOS 16 风格设计语言**，核心原则：
 
-### Color (light theme)
-- **Canvas** `--bg` `#f7f7f9` — everywhere behind cards.
-- **Elevated canvas** `--bg-elev` `#eceef2` — inset groups, inactive tabs, icon-button background.
-- **Card / surface** `--card` `#ffffff`.
-- **Hairline** `--border` `#ececf0` — 1px dividers. `--border-strong` `#dcdce3` on inputs (1.5px) and pressed icon-buttons.
-- **Text:** `--text-primary` `#1c1c1e`, `--text-secondary` `#8a8a92`, `--text-tertiary` `#b4b4bc` (empty-state captions, hints, day-detail headers).
-- **Accents — semantic, not decorative.** Each accent gets two siblings: `*-soft` for tinted backgrounds, `--accent-ink` for pressed blue:
-  - `--accent` `#4a7dff` → primary action, today highlight (calendar day), link-like text, FAB
-  - `--accent-soft` `#e8efff` → account badge, accent tags, syncing pill bg
-  - `--accent-ink` `#2d5fe0` → pressed auth button, stats heatmap outline for today
-  - `--green` `#3ec177` / `--green-soft` `#e2f5ea` → completed cells, milestones, heatmap gradient
-  - `--yellow` `#f5b740` / `--yellow-soft` `#fff4dc` → "today-done" cell state, carry-forward card
-  - `--purple` `#a668e0` / `--purple-soft` `#f1e7fb` → bonus cells (sessions beyond 30)
-  - `--red` `#e5564b` / `--red-soft` `#fde9e7` → destructive actions, errors, sync-failed pill
-  - `--orange` `#ef8a3d` → offline sync status
-- **Grid cells pending** `--cell-pending` `#e9e9ee` — the default "not yet done" state.
+This project uses an **iOS 16-era design language**, with core principles:
 
-### Color (dark theme)
-Triggered by `html[data-theme="dark"]`, or `html[data-theme="auto"]` when the OS reports dark. Canvas drops to `#0f0f12`, cards to `#1a1a1f`, borders to `#26262c` / `#33333a`. Accents lift slightly (`--accent` `#6a94ff`, `--green` `#4fcc88`, `--purple` `#b880ea`, `--red` `#ef685c`), and the `*-soft` backgrounds become deep low-chroma versions of their hue (`--accent-soft` `#1d2a4a` etc.). Shadows switch to pure black at higher opacity.
+| 原则 / Principle | 中文 | English |
+|---|---|---|
+| **配色 / Colors** | 语义化强调色，非装饰性 | Semantic accent colors, not decorative |
+| **字体 / Typography** | 系统字体栈，无自定义 WebFont | System font stack, no custom webfonts |
+| **间距 / Spacing** | 4px 网格，8/12/16/24px 层级 | 4px grid, 8/12/16/24px scale |
+| **圆角 / Radii** | 8/12/16/20px 一致层级 | Consistent 8/12/16/20px ladder |
+| **动效 / Motion** | 极简，仅模态框有弹性缓动 | Minimal, only modal has spring easing |
+| **暗色模式 / Dark Mode** | 完整的深色主题支持 | Full dark theme support |
 
-### Typography
-- **Family:** system stack `-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', sans-serif`. **No custom webfonts are loaded** — the app intentionally defers to the OS so Chinese renders with PingFang SC on Apple and Noto/system-default elsewhere.
-- **Scale:** 11 / 12 / 13 / 14 / 15 / 16 / 17 / 18 / 22 / 28 px. See `colors_and_type.css`.
-- **Weights used:** 500 / 600 / 700 / 800. The auth title is **800 (black)**, header & modal titles 700, most labels 600, KPI numbers 800 with `-0.8px` letter-spacing.
-- **Letter-spacing, line-height:** mostly default. Tightened on display / KPI numerals only.
-
-### Spacing & layout
-- **4 px grid.** Dominant paddings are 12 / 14 / 16 px.
-- **Content width** caps at **560 px** (was 520 in v4); the whole app is phone-centric.
-- Header: sticky, frosted, padding `calc(12px + safe-area-top) 20px 10px`.
-- FAB fixed 32 px above `env(safe-area-inset-bottom)`, centered.
-- Cards have internal `16 px` padding; modals `24 20 20`.
-- Tab bar: 3 tabs (Calendar / Grid / Stats), segmented control with animated pill indicator.
-
-### Corner radii
-A consistent radii ladder, now explicitly named in the `--r-*` scale:
-- `--r-sm` `8 px` small (tag-like buttons, subtask cells, heatmap squares)
-- `--r-md` `12 px` inputs, tab bar, small cards, subtask-item container
-- `--r-lg` `16 px` default card — the most common radius in the app
-- `--r-xl` `20 px` modal
-- `24 px` auth card (inline, no token)
-- `--r-pill` `999 px` FAB, chips, sync pill, milestones
-- `50%` round dots, delete × buttons
-
-### Shadows
-A three-tier elevation system plus the one tinted exception:
-- `--shadow-sm` `0 1px 2px rgba(20,20,30,0.04), 0 1px 1px rgba(20,20,30,0.03)` — sync-pill, tab-indicator
-- `--shadow-md` `0 2px 8px rgba(20,20,30,0.05), 0 1px 2px rgba(20,20,30,0.03)` — default cards
-- `--shadow-lg` `0 8px 28px rgba(20,20,30,0.08), 0 2px 6px rgba(20,20,30,0.04)` — auth card, popovers
-- `--shadow-fab` `0 6px 20px rgba(74,125,255,0.32), 0 2px 6px rgba(74,125,255,0.18)` — the one colored shadow, tinted to the FAB's accent.
-- Today-cell in the grid gets a yellow glow ring instead of a shadow: `0 0 0 3px rgba(245, 183, 64, 0.35)`.
-
-### Backgrounds
-Solid colors only. **No images, no illustrations, no patterns, no gradients** anywhere in the UI — with one deliberate exception: the **auth-card logo chip** uses a subtle `linear-gradient(135deg, --accent → --accent-ink)` to give the brand mark depth against the auth background. Elsewhere: flat. The 512-px launch icon is the only brand illustration, and it's a flat abstraction of the app itself (a stylised checklist card).
-
-### Transparency & blur
-- Header uses `backdrop-filter: saturate(1.6) blur(20px)` over `color-mix(in srgb, var(--bg) 82%, transparent)`. This is the only frosted surface in the app.
-- Modal overlay uses `backdrop-filter: blur(4px)` over `rgba(0,0,0,0.4)` dimmer.
-- Loading overlay uses a blurred wash over the canvas color (defined but effectively unreached in v5 — the app is now offline-first and no longer shows a blocking loader on startup).
-
-### Borders
-- 1 px `--border` for card-internal dividers (`day-detail` rows, modal sections).
-- **1.5 px solid `--border-strong`** on interactive inputs and small pill buttons — slightly heavier than hairline.
-- **1.5 px dashed `--border`** on the "+ add subtask" empty slot — a deliberate "ghost" affordance.
-
-### Animation
-Minimal, utilitarian, no bounce except modal entry:
-- **Modal enter:** `transform` from `scale(0.92) translateY(10px)` over 0.25s with spring ease `cubic-bezier(0.34, 1.56, 0.64, 1)` (`--ease-spring`). This is the one expressive easing in the system.
-- **Accordion expand:** `max-height` 0→3000 px over 0.32s `var(--ease-out)`. Chevron rotates 180° on the same timing.
-- **Tab indicator:** slides horizontally over `--t-slow` — the pill follows the active tab.
-- **Progress bars:** `width` 0.3–0.5s `ease`.
-- **Fades:** overlay opacity 0.2s.
-- **Tab-page entry:** `fadeInUp` 6px translate + opacity over 0.25s when switching tabs.
-- **No entrance animations** on initial page load.
-
-### Press & hover states
-- **Press (most common):** `opacity` or `transform: scale(0.9–0.96)` on `:active`, applied to headers, buttons, list rows.
-- **Press + scale:** FAB uses `transform: translateX(-50%) scale(0.96)`. Calendar-nav and icon-btn `scale(0.9–0.92)` + background shift to `--border-strong`. Cells scale down lightly.
-- **No hover states** — the app is mobile-only by design. `:hover` is unused except on the stats heatmap cells, which lift 1.25× on hover as a desktop-preview affordance only.
-- Long-press on cells (~550 ms) undoes the last yellow cell; this is the one gesture beyond tap.
-
-### Cards
-- White fill (`--card`), 16 px radius (`--r-lg`), `--shadow-md`, 1px `--border`. Content stacks vertically; header row + expandable body separated by a 1 px `--border` internal line. Inside cards, grouped content sits on `--bg` inside rounded 12 px wrappers — the same gray-on-white-on-gray recursion Apple uses for Settings-style groups.
-
-### Focus states
-- Inputs: `border-color` transitions from `--border-strong` to `--accent` over 0.2s on `:focus`; background shifts from `--bg-elev` to `--card`. No ring, no outline.
-- `outline: none` everywhere. `-webkit-tap-highlight-color: transparent` globally.
-
-### Layout rules (fixed elements)
-- Header: `position: sticky; top: 0`. Frosted. Contains sync-pill + theme button + account button on the right.
-- FAB: `position: fixed; bottom: calc(32px + safe-area-bottom); left: 50%` centered, pill-shaped. Hidden on the stats tab.
-- Modal overlay: `position: fixed; inset: 0`.
-- (v4 had a fixed sync-status pill at `top:70px, right:16px`; v5 moved it into the header flow.)
-
-### Color vibe of imagery
-No imagery. If/when imagery is introduced, keep it warm-neutral and low-contrast; the current palette is cool-leaning so a slight warm push would create a useful counterpoint without clashing.
+详细设计令牌请参阅 `colors_and_type.css`。  
+For detailed design tokens, see `colors_and_type.css`.
 
 ---
 
-## Iconography
+## 🧑‍💻 Development · 开发
 
-**Approach: extremely minimal, inline SVG, with emoji only as Chinese-reading "punctuation".** There is no icon library, no icon font, no SVG sprite, no CDN-linked set.
+```bash
+# 直接编辑 index.html — 所有代码在单文件中
+# Edit index.html directly — all code in a single file
 
-- **Inline SVG** — all icons are hand-rolled inline SVG in the HTML:
-  - `plus` (FAB and add buttons) — 16×16, 2.2 stroke, white on blue
-  - `chevron-down` (task/subtask expand, cal nav) — 14–20 px, 1.8–2 stroke, rotated 180° when open
-  - `calendar / grid / stats` tab glyphs — 14×14, 1.8 stroke, `currentColor`
-  - `sun / moon / auto-circle` theme glyphs — 14×14, 1.8 stroke
-  - `logout` arrow — 14×14, 1.8 stroke
-  - `check` (plan checkbox, menu select) — 12×12 / 16×16, 2 stroke
-- **Emoji as icons** — used only in the auth hint (`☁️` cloud) and stats milestones tooltip context. Tab labels switched to inline SVG in v5.
-- **Unicode glyphs as icons** — `●` / `○` sync status dot, `×` delete, `↻` carry-forward.
-- **Checkbox** — custom styled span with SVG check glyph; not a styled native input.
+# 修改 CSS 变量后刷新浏览器即可看到效果
+# After changing CSS variables, refresh browser to see changes
+```
 
-**Recommendation going forward.** Keep this bar: new icons should be **monochrome inline SVG at 1.5–2.2 stroke, 14–20 px**, single-color (`currentColor` or a semantic var). If a library is ever needed, **Lucide** matches the weight and flat-rounded feel closest. Never draw decorative illustrations — the app's personality is restraint.
+### 版本历史 / Version History
 
-**Logo.** `assets/icon-512.svg` — a rounded blue square with a stylised white checklist card (two tasks, green check and yellow in-progress pills). It's both the app icon and the only brand mark. PWA installs use `icon-192.png`, `icon-512.png`, and `apple-touch-icon.png` at the repo root.
+| 版本 / Version | 变更 / Changes |
+|---|---|
+| **v5** | 柔和配色、统计面板、主题切换、离线优先 / Softer palette, stats tab, theme toggle, offline-first |
+| **v4** | React 复刻版（已归档）/ React recreation (archived) |
+| **v1–v3** | 初始版本 / Initial versions |
 
 ---
 
-## Caveats
+## 📄 License · 许可证
 
-- **No Figma file, no brand guide document.** All tokens are reverse-engineered from `index.html`. If an authoritative brand doc exists, supply it and this system will be re-aligned.
-- **`ui_kits/pwa/` is v4.** It predates the v5 polish (softer palette, stats tab, theme toggle, offline-first init). A v5 UI kit has not been built yet; use `index.html` as source of truth for current visual state.
-- **Fonts are system-only by design.** If a future version wants a branded typeface, Inter / SF Pro Text ship closest to current rendering on non-Apple devices.
+MIT
+
+---
+
+<p align="center">
+  Made with 🪚 by <a href="https://github.com/raylanlin">Raylan LIN</a>
+</p>
