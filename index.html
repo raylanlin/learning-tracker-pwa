@@ -514,6 +514,175 @@
       100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
     }
 
+    /* ── Sharing: partner badges, pair settings, private flag ────────────── */
+    /* Calendar dot — partner's own dot is a hollow ring */
+    .cal-day .dot.partner {
+      background: transparent;
+      border: 1.5px solid var(--purple);
+      width: 4px; height: 4px;
+    }
+    .cal-day .dots {
+      position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 3px; align-items: center;
+    }
+    /* Per-item small partner tag (sits at end of a calendar-task / task / countdown row) */
+    .partner-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 7px 2px 3px;
+      background: var(--purple-soft); color: var(--purple);
+      border-radius: var(--r-pill);
+      font-size: 10px; font-weight: 700; line-height: 1;
+      flex-shrink: 0;
+    }
+    .partner-tag .pt-avatar {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      font-size: 9px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    /* Private lock glyph */
+    .private-mark {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 14px; height: 14px; flex-shrink: 0;
+      color: var(--text-tertiary);
+    }
+    .private-mark svg { width: 11px; height: 11px; }
+
+    /* Partner section divider in lists */
+    .partner-section-head {
+      display: flex; align-items: center; gap: 8px;
+      margin: 18px 4px 8px;
+      font-size: 11px; font-weight: 700; color: var(--text-tertiary);
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+    .partner-section-head .pt-avatar {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      font-size: 10px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .partner-section-head .ro-pill {
+      margin-left: auto;
+      padding: 1px 7px; border-radius: var(--r-pill);
+      background: var(--bg-elev); color: var(--text-tertiary);
+      font-size: 10px; font-weight: 600; letter-spacing: 0;
+      text-transform: none;
+    }
+
+    /* Read-only treatment for partner cards */
+    .ro-card {
+      opacity: 0.92;
+      background: var(--bg-elev);
+    }
+    .ro-card.task-card { background: var(--card); border-style: dashed; border-color: var(--border-strong); }
+    .ro-card.countdown-card { border-style: dashed; }
+    .ro-card .calendar-task-delete,
+    .ro-card .countdown-delete,
+    .ro-card .quick-chip,
+    .ro-card .add-sub-btn { display: none !important; }
+    .ro-card input[type="checkbox"] { pointer-events: none; }
+    .ro-card .cell { cursor: default; }
+    .ro-card .calendar-task-name.done { text-decoration: line-through; }
+
+    /* Day detail: partner sub-section */
+    .day-detail .partner-block {
+      margin-top: 14px; padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+    .day-detail .partner-block .partner-section-head { margin-top: 0; }
+    .day-detail .partner-block .calendar-task-item {
+      background: color-mix(in srgb, var(--purple-soft) 60%, transparent);
+      border-radius: var(--r-md); padding: 4px 8px;
+    }
+
+    /* ── Pair settings modal ─────────────────────────────────── */
+    .pair-section { margin-bottom: 16px; }
+    .pair-section h3 {
+      font-size: 12px; font-weight: 700; color: var(--text-secondary);
+      letter-spacing: 0.3px; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .pair-empty {
+      padding: 16px; border-radius: var(--r-md);
+      background: var(--bg-elev); color: var(--text-tertiary);
+      font-size: 13px; text-align: center;
+    }
+    .pair-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--r-md);
+      background: var(--bg-elev);
+      margin-bottom: 6px;
+    }
+    .pair-row .pr-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 14px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pair-row.partner .pr-avatar { background: var(--purple); }
+    .pair-row .pr-info { flex: 1; min-width: 0; }
+    .pair-row .pr-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .pair-row .pr-status { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+    .pair-row .pr-status.accepted { color: var(--green); }
+    .pair-row .pr-status.pending { color: var(--orange); }
+    .pair-row .pr-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .pair-btn {
+      border: none; padding: 6px 12px; border-radius: var(--r-pill);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: transform var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+    }
+    .pair-btn:active { transform: scale(0.94); }
+    .pair-btn.primary { background: var(--accent); color: #fff; }
+    .pair-btn.primary:hover { background: var(--accent-ink); }
+    .pair-btn.subtle { background: var(--card); color: var(--text-primary); border: 1px solid var(--border-strong); }
+    .pair-btn.danger { background: var(--red-soft); color: var(--red); }
+
+    .pair-search {
+      display: flex; gap: 8px;
+    }
+    .pair-search input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: var(--r-md);
+      background: var(--bg-elev); color: var(--text-primary);
+      font-size: 14px; font-family: inherit;
+      transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+    }
+    .pair-search input:focus {
+      outline: none; border-color: var(--accent); background: var(--card);
+    }
+    .pair-hint {
+      font-size: 11px; color: var(--text-tertiary); margin-top: 6px;
+    }
+
+    /* ── Long-press context menu (private flag, etc) ─────── */
+    .ctx-menu {
+      position: fixed; z-index: 1000;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-md); box-shadow: var(--shadow-lg);
+      padding: 6px; min-width: 160px;
+      opacity: 0; transform: scale(0.94);
+      pointer-events: none;
+      transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-spring);
+    }
+    .ctx-menu.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .ctx-menu button {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; padding: 9px 10px; border: none; background: transparent;
+      cursor: pointer; font-size: 13px; font-weight: 500;
+      color: var(--text-primary); border-radius: 8px; text-align: left;
+    }
+    .ctx-menu button:hover { background: var(--bg-elev); }
+    .ctx-menu button.danger { color: var(--red); }
+    .ctx-menu svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--text-secondary); }
+    .ctx-menu button.danger svg { color: var(--red); }
+    .ctx-overlay {
+      position: fixed; inset: 0; z-index: 999;
+      background: transparent;
+    }
+
     /* ── Carry-forward suggestion ─────────────────────── */
     .carry-card {
       background: var(--yellow-soft);
@@ -1220,6 +1389,10 @@
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4M8 8l4-4 4 4M4 20h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             导入数据
           </button>
+          <button class="menu-item" id="pairSettingsBtn" style="color:var(--purple);">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="currentColor" stroke-width="1.8"/><path d="M3 21a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="19" cy="6" r="2" stroke="currentColor" stroke-width="1.8"/></svg>
+            日程关联
+          </button>
           <div class="menu-divider"></div>
           <button class="menu-item logout" id="logoutBtn">
             <svg viewBox="0 0 24 24" fill="none"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l-5-5 5-5M5 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1272,6 +1445,7 @@
     </div>
     <div class="tab-page" id="gridPage">
       <div id="taskList"></div>
+      <div id="partnerTaskList"></div>
       <div class="empty-hint" id="emptyHint" style="display:none;">
         <div class="empty-art">
           <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 0 1 2-2h10l4 4v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -1332,6 +1506,43 @@
       </div>
     </div>
   </div>
+
+  <!-- Pair (sharing) Modal -->
+  <div class="modal-overlay" id="pairModalOverlay">
+    <div class="modal" style="max-width:420px;">
+      <h2>日程关联</h2>
+      <p style="font-size:12px;color:var(--text-secondary);text-align:center;margin:-6px 0 16px;line-height:1.5;">
+        关联后,对方可以看到你的所有日程<br/>但不能修改。单条日程可以单独标记为私密。
+      </p>
+
+      <div class="pair-section" id="pairCurrentSection">
+        <h3>当前关联</h3>
+        <div id="pairCurrentList"></div>
+      </div>
+
+      <div class="pair-section" id="pairIncomingSection" style="display:none;">
+        <h3>邀请中</h3>
+        <div id="pairIncomingList"></div>
+      </div>
+
+      <div class="pair-section">
+        <h3>添加关联</h3>
+        <div class="pair-search">
+          <input type="text" id="pairSearchInput" placeholder="对方的账号,例如 claude" autocomplete="off" maxlength="30" />
+          <button class="pair-btn primary" id="pairSendBtn">邀请</button>
+        </div>
+        <div class="pair-hint" id="pairSearchHint">对方接受后,双方互相可见</div>
+      </div>
+
+      <div class="modal-btns">
+        <button class="btn-cancel" id="pairModalClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Long-press context menu -->
+  <div class="ctx-overlay" id="ctxOverlay" style="display:none;"></div>
+  <div class="ctx-menu" id="ctxMenu"></div>
 
   <!-- Loading -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -1453,6 +1664,360 @@ async function apiSaveData(userId, payload) {
   if (!res.ok) throw new Error('Save failed: ' + (await res.text()));
   const text = await res.text();
   return text ? JSON.parse(text) : {};
+}
+
+// ============================================================
+// ── Sharing (pairing + partner data) ─────────────────────────
+// ============================================================
+
+// State
+let myProfile = null;          // { user_id, username, display_name }
+let pairs = [];                // all pair rows involving me
+let acceptedPair = null;       // resolved accepted pair (or null)
+let partnerProfile = null;     // partner's profile (when accepted)
+let partnerData = null;        // partner's tasks/sessions/calendarTasks/countdowns (when accepted)
+let partnerPollTimer = null;
+
+function commonHeaders() {
+  return {
+    apikey: SUPABASE_ANON,
+    Authorization: 'Bearer ' + sessionToken
+  };
+}
+
+// Profile API
+async function apiUpsertMyProfile(username, displayName) {
+  // Idempotent upsert — uses PK (user_id)
+  const res = await fetch(API + '/learning_tracker_profiles?on_conflict=user_id', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=merge-duplicates,return=representation',
+      ...commonHeaders()
+    },
+    body: JSON.stringify({ user_id: user.id, username, display_name: displayName })
+  });
+  if (!res.ok) {
+    console.warn('[profiles] upsert failed:', await res.text());
+    return null;
+  }
+  const data = await res.json();
+  return data[0] || null;
+}
+
+async function apiFindProfileByUsername(username) {
+  const url = API + '/learning_tracker_profiles?username=eq.' + encodeURIComponent(username) + '&limit=1';
+  const res = await fetch(url, { headers: commonHeaders() });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data[0] || null;
+}
+
+async function apiGetProfile(userId) {
+  const url = API + '/learning_tracker_profiles?user_id=eq.' + userId + '&limit=1';
+  const res = await fetch(url, { headers: commonHeaders() });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data[0] || null;
+}
+
+// Pair API
+async function apiLoadPairs() {
+  const url = API + '/learning_tracker_pairs?or=(requester_id.eq.' + user.id + ',partner_id.eq.' + user.id + ')&order=created_at.desc';
+  const res = await fetch(url, { headers: commonHeaders() });
+  if (!res.ok) {
+    console.warn('[pairs] load failed:', await res.text());
+    return [];
+  }
+  return await res.json();
+}
+
+async function apiCreatePair(partnerProfile) {
+  const body = {
+    requester_id: user.id,
+    partner_id: partnerProfile.user_id,
+    requester_username: myProfile.username,
+    partner_username: partnerProfile.username,
+    status: 'pending'
+  };
+  const res = await fetch(API + '/learning_tracker_pairs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+      ...commonHeaders()
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(t || '邀请失败');
+  }
+  return (await res.json())[0];
+}
+
+async function apiUpdatePair(id, status) {
+  const res = await fetch(API + '/learning_tracker_pairs?id=eq.' + id, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation',
+      ...commonHeaders()
+    },
+    body: JSON.stringify({ status })
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return (await res.json())[0];
+}
+
+async function apiDeletePair(id) {
+  const res = await fetch(API + '/learning_tracker_pairs?id=eq.' + id, {
+    method: 'DELETE',
+    headers: commonHeaders()
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
+
+// Partner data: reuses apiLoadData (same table, RLS allows when accepted)
+async function apiLoadPartnerData(partnerId) {
+  const url = API + '/learning_tracker_data?user_id=eq.' + partnerId + '&limit=1';
+  const res = await fetch(url, { headers: commonHeaders() });
+  if (!res.ok) {
+    console.warn('[partner data] load failed:', await res.text());
+    return null;
+  }
+  const data = await res.json();
+  return data[0] || null;
+}
+
+// Top-level: refresh sharing state and re-render. Called on login + periodically.
+async function refreshSharing({ silent = false } = {}) {
+  if (!user) return;
+  try {
+    pairs = await apiLoadPairs();
+    acceptedPair = pairs.find(p => p.status === 'accepted') || null;
+    if (acceptedPair) {
+      const partnerId = acceptedPair.requester_id === user.id ? acceptedPair.partner_id : acceptedPair.requester_id;
+      const [prof, row] = await Promise.all([
+        apiGetProfile(partnerId),
+        apiLoadPartnerData(partnerId)
+      ]);
+      partnerProfile = prof || {
+        user_id: partnerId,
+        username: acceptedPair.requester_id === user.id ? acceptedPair.partner_username : acceptedPair.requester_username,
+        display_name: null
+      };
+      partnerData = row ? sanitizePartnerData(row) : null;
+    } else {
+      partnerProfile = null;
+      partnerData = null;
+    }
+    // Re-render anything affected
+    renderCalendar();
+    renderGrid();
+    renderCountdown();
+    if (typeof renderStats === 'function') renderStats();
+    // If pair settings modal is open, refresh it too
+    if (document.getElementById('pairModalOverlay').classList.contains('show')) {
+      renderPairSettings();
+    }
+  } catch (e) {
+    if (!silent) console.error('[sharing] refresh failed:', e);
+  }
+}
+
+// Strip private items + return a normalized object with same shape as our local state
+function sanitizePartnerData(row) {
+  const out = {
+    tasks: (row.tasks || []).filter(t => !t._private),
+    sessions: row.sessions || {},
+    calendarTasks: {},
+    countdowns: (row.countdowns || []).filter(c => !c._private)
+  };
+  const ct = row.calendar_tasks || {};
+  for (const k in ct) {
+    const filtered = (ct[k] || []).filter(c => !c._private);
+    if (filtered.length) out.calendarTasks[k] = filtered;
+  }
+  return out;
+}
+
+function partnerInitial() {
+  const name = (partnerProfile && (partnerProfile.display_name || partnerProfile.username)) || '?';
+  return name.charAt(0).toUpperCase();
+}
+function partnerDisplayName() {
+  if (!partnerProfile) return '';
+  return partnerProfile.display_name || partnerProfile.username || '';
+}
+
+// ── Pair settings modal ─────────────────────────────────────
+function openPairSettings() {
+  document.getElementById('pairModalOverlay').classList.add('show');
+  document.getElementById('pairSearchInput').value = '';
+  document.getElementById('pairSearchHint').textContent = '对方接受后,双方互相可见';
+  document.getElementById('pairSearchHint').style.color = '';
+  renderPairSettings();
+  // Refresh in background
+  refreshSharing({ silent: true });
+}
+function closePairSettings() {
+  document.getElementById('pairModalOverlay').classList.remove('show');
+}
+function renderPairSettings() {
+  const curList = document.getElementById('pairCurrentList');
+  const incomingSection = document.getElementById('pairIncomingSection');
+  const incomingList = document.getElementById('pairIncomingList');
+
+  // accepted + outgoing pending — shown as "current"
+  const accepted = pairs.filter(p => p.status === 'accepted');
+  const outgoing = pairs.filter(p => p.status === 'pending' && p.requester_id === user.id);
+  const incoming = pairs.filter(p => p.status === 'pending' && p.partner_id === user.id);
+
+  let html = '';
+  accepted.forEach(p => {
+    const isReq = p.requester_id === user.id;
+    const otherName = isReq ? p.partner_username : p.requester_username;
+    html += `
+      <div class="pair-row partner">
+        <div class="pr-avatar">${otherName.charAt(0).toUpperCase()}</div>
+        <div class="pr-info">
+          <div class="pr-name">${escHtml(otherName)}</div>
+          <div class="pr-status accepted">● 已关联</div>
+        </div>
+        <div class="pr-actions">
+          <button class="pair-btn danger" data-pair-unpair="${p.id}">解除</button>
+        </div>
+      </div>`;
+  });
+  outgoing.forEach(p => {
+    html += `
+      <div class="pair-row">
+        <div class="pr-avatar">${p.partner_username.charAt(0).toUpperCase()}</div>
+        <div class="pr-info">
+          <div class="pr-name">${escHtml(p.partner_username)}</div>
+          <div class="pr-status pending">⏳ 等待对方确认</div>
+        </div>
+        <div class="pr-actions">
+          <button class="pair-btn subtle" data-pair-cancel="${p.id}">取消</button>
+        </div>
+      </div>`;
+  });
+  if (!html) html = `<div class="pair-empty">还没有关联任何人</div>`;
+  curList.innerHTML = html;
+
+  // incoming
+  if (incoming.length) {
+    incomingSection.style.display = '';
+    incomingList.innerHTML = incoming.map(p => `
+      <div class="pair-row">
+        <div class="pr-avatar">${p.requester_username.charAt(0).toUpperCase()}</div>
+        <div class="pr-info">
+          <div class="pr-name">${escHtml(p.requester_username)}</div>
+          <div class="pr-status pending">想关联你的日程</div>
+        </div>
+        <div class="pr-actions">
+          <button class="pair-btn subtle" data-pair-decline="${p.id}">拒绝</button>
+          <button class="pair-btn primary" data-pair-accept="${p.id}">接受</button>
+        </div>
+      </div>`).join('');
+  } else {
+    incomingSection.style.display = 'none';
+  }
+
+  // Bind buttons
+  curList.querySelectorAll('[data-pair-unpair]').forEach(b => {
+    b.addEventListener('click', async () => {
+      if (!confirm('确定解除关联?对方将不再看到你的日程。')) return;
+      try {
+        await apiDeletePair(b.dataset.pairUnpair);
+        toast('已解除关联');
+        await refreshSharing();
+      } catch (e) { alert('操作失败:' + e.message); }
+    });
+  });
+  curList.querySelectorAll('[data-pair-cancel]').forEach(b => {
+    b.addEventListener('click', async () => {
+      try {
+        await apiDeletePair(b.dataset.pairCancel);
+        toast('已取消邀请');
+        await refreshSharing();
+      } catch (e) { alert('操作失败:' + e.message); }
+    });
+  });
+  incomingList.querySelectorAll('[data-pair-accept]').forEach(b => {
+    b.addEventListener('click', async () => {
+      try {
+        await apiUpdatePair(b.dataset.pairAccept, 'accepted');
+        toast('已接受关联');
+        await refreshSharing();
+      } catch (e) { alert('操作失败:' + e.message); }
+    });
+  });
+  incomingList.querySelectorAll('[data-pair-decline]').forEach(b => {
+    b.addEventListener('click', async () => {
+      try {
+        await apiDeletePair(b.dataset.pairDecline);
+        toast('已拒绝');
+        await refreshSharing();
+      } catch (e) { alert('操作失败:' + e.message); }
+    });
+  });
+}
+
+async function sendPairInvite() {
+  const input = document.getElementById('pairSearchInput');
+  const hint = document.getElementById('pairSearchHint');
+  const btn = document.getElementById('pairSendBtn');
+  const username = input.value.trim().toLowerCase();
+  if (!username) {
+    hint.textContent = '请输入对方账号';
+    hint.style.color = 'var(--red)';
+    return;
+  }
+  if (myProfile && username === myProfile.username) {
+    hint.textContent = '不能关联自己';
+    hint.style.color = 'var(--red)';
+    return;
+  }
+  // Check if already paired/pending with them
+  const existing = pairs.find(p =>
+    (p.requester_username === username || p.partner_username === username) &&
+    (p.status === 'pending' || p.status === 'accepted')
+  );
+  if (existing) {
+    hint.textContent = existing.status === 'accepted' ? '已经关联了' : '已经发出邀请';
+    hint.style.color = 'var(--orange)';
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '查找中';
+  try {
+    const target = await apiFindProfileByUsername(username);
+    if (!target) {
+      hint.textContent = '没找到这个账号';
+      hint.style.color = 'var(--red)';
+      btn.disabled = false; btn.textContent = '邀请';
+      return;
+    }
+    if (target.user_id === user.id) {
+      hint.textContent = '不能关联自己';
+      hint.style.color = 'var(--red)';
+      btn.disabled = false; btn.textContent = '邀请';
+      return;
+    }
+    await apiCreatePair(target);
+    input.value = '';
+    hint.textContent = '已发出邀请,等待对方接受';
+    hint.style.color = 'var(--green)';
+    toast('邀请已发出');
+    await refreshSharing();
+  } catch (e) {
+    hint.textContent = '邀请失败:' + (e.message || '请重试');
+    hint.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false; btn.textContent = '邀请';
+  }
 }
 
 // ── Auth ──
@@ -1648,6 +2213,34 @@ function initApp() {
     document.getElementById('appHeader').classList.toggle('scrolled', window.scrollY > 4);
   }, { passive: true });
 
+  // Sharing: profile + pairs (background, idempotent)
+  initSharing();
+}
+
+// ── Sharing init: ensure profile row exists, then load pairs + partner data.
+async function initSharing() {
+  if (!user) return;
+  try {
+    const email = (user && user.email) || '';
+    const username = email.split('@')[0] || 'me';
+    const account = USER_ACCOUNTS[username];
+    const displayName = (account && account.name) || username;
+    myProfile = await apiUpsertMyProfile(username, displayName);
+    if (!myProfile) {
+      // Fallback so UI doesn't crash if upsert is silently denied
+      myProfile = { user_id: user.id, username, display_name: displayName };
+    }
+    await refreshSharing({ silent: true });
+    // Periodic refresh — picks up new invites and partner edits.
+    if (partnerPollTimer) clearInterval(partnerPollTimer);
+    partnerPollTimer = setInterval(() => {
+      if (document.visibilityState === 'visible' && navigator.onLine) {
+        refreshSharing({ silent: true });
+      }
+    }, 45000);
+  } catch (e) {
+    console.warn('[sharing] init failed:', e);
+  }
 }
 
 // ── Utils ──
@@ -1724,10 +2317,24 @@ function renderCalendar() {
     if (dateStr === selectedDate) div.classList.add('selected');
     const hasSessions = sessions[dateStr] && sessions[dateStr].length > 0;
     const hasCalTasks = calendarTasks[dateStr] && calendarTasks[dateStr].some(ct => ct.done);
-    if (hasSessions || hasCalTasks) {
-      const dot = document.createElement('div');
-      dot.className = 'dot';
-      div.appendChild(dot);
+    // Partner activity (accepted pair only) — empty ring next to my dot
+    const pHasSessions = partnerData && partnerData.sessions && partnerData.sessions[dateStr] && partnerData.sessions[dateStr].length > 0;
+    const pHasCalTasks = partnerData && partnerData.calendarTasks && partnerData.calendarTasks[dateStr] && partnerData.calendarTasks[dateStr].some(ct => ct.done);
+    if (hasSessions || hasCalTasks || pHasSessions || pHasCalTasks) {
+      const dots = document.createElement('div');
+      dots.className = 'dots';
+      if (hasSessions || hasCalTasks) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dots.appendChild(dot);
+      }
+      if (pHasSessions || pHasCalTasks) {
+        const dot = document.createElement('div');
+        dot.className = 'dot partner';
+        dot.title = partnerDisplayName();
+        dots.appendChild(dot);
+      }
+      div.appendChild(dots);
     }
     div.addEventListener('click', () => {
       selectedDate = dateStr;
@@ -1765,13 +2372,15 @@ function renderCalendarTasks() {
   } else {
     html += `<div class="calendar-task-list">`;
     dayCalTasks.forEach((ct, i) => {
+      const priv = ct._private ? `<span class="private-mark" title="私密"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5M2.5 5.5h7v5h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>` : '';
       html += `
-        <div class="calendar-task-item">
+        <div class="calendar-task-item" data-lp-ct="${i}">
           <label class="calendar-task-checkbox">
             <input type="checkbox" ${ct.done ? 'checked' : ''} data-ct-check="${selectedDate}|${i}" />
             <span class="cb"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5L9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <span class="calendar-task-name ${ct.done ? 'done' : ''}">${escHtml(ct.name)}</span>
           </label>
+          ${priv}
           <button class="calendar-task-delete" data-ct-del="${selectedDate}|${i}" aria-label="删除">
             <svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           </button>
@@ -1783,8 +2392,34 @@ function renderCalendarTasks() {
       <button class="add-inline-btn" id="addCalTaskBtn">
         <svg viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         添加计划
-      </button>
-    </div>`;
+      </button>`;
+
+  // Partner's calendar tasks for this day (read-only)
+  const partnerDayTasks = (partnerData && partnerData.calendarTasks && partnerData.calendarTasks[selectedDate]) || [];
+  if (partnerDayTasks.length) {
+    const pDone = partnerDayTasks.filter(c => c.done).length;
+    html += `
+      <div class="partner-block">
+        <div class="partner-section-head">
+          <span class="pt-avatar">${partnerInitial()}</span>
+          <span>${escHtml(partnerDisplayName())} 的计划</span>
+          <span class="ro-pill">只读 ${pDone}/${partnerDayTasks.length}</span>
+        </div>
+        <div class="calendar-task-list">`;
+    partnerDayTasks.forEach(ct => {
+      html += `
+        <div class="calendar-task-item">
+          <label class="calendar-task-checkbox" style="pointer-events:none;">
+            <input type="checkbox" ${ct.done ? 'checked' : ''} disabled />
+            <span class="cb"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6l2.5 2.5L9.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="calendar-task-name ${ct.done ? 'done' : ''}">${escHtml(ct.name)}</span>
+          </label>
+          <span class="partner-tag"><span class="pt-avatar">${partnerInitial()}</span>${escHtml(partnerDisplayName())}</span>
+        </div>`;
+    });
+    html += `</div></div>`;
+  }
+  html += `</div>`;
   container.innerHTML = html;
 
   document.getElementById('addCalTaskBtn').addEventListener('click', () => openCalendarTaskModal());
@@ -1802,41 +2437,201 @@ function renderCalendarTasks() {
       deleteCalendarTask(d, parseInt(i));
     });
   });
+  // Long-press on own calendar task → context menu (toggle private / delete)
+  container.querySelectorAll('[data-lp-ct]').forEach(el => {
+    bindLongPress(el, (ev) => {
+      const i = parseInt(el.dataset.lpCt);
+      const ct = (calendarTasks[selectedDate] || [])[i];
+      if (!ct) return;
+      openCtxMenu(ev, [
+        ct._private
+          ? { label: '取消私密', icon: 'unlock', action: () => togglePrivateCalendarTask(selectedDate, i, false) }
+          : { label: '标记为私密', icon: 'lock', action: () => togglePrivateCalendarTask(selectedDate, i, true) },
+        { label: '删除', icon: 'trash', danger: true, action: () => deleteCalendarTask(selectedDate, i) }
+      ]);
+    });
+  });
   renderCarryForward();
+}
+
+// ── Private flag toggles ──
+function togglePrivateCalendarTask(dateKey, idx, makePrivate) {
+  const list = calendarTasks[dateKey] || [];
+  if (!list[idx]) return;
+  if (makePrivate) list[idx]._private = true;
+  else delete list[idx]._private;
+  saveLocal();
+  renderCalendar(); renderCalendarTasks();
+  toast(makePrivate ? '已标记为私密' : '已取消私密');
+  haptic();
+}
+function togglePrivateTask(taskId, makePrivate) {
+  const t = tasks.find(x => x.id === taskId);
+  if (!t) return;
+  if (makePrivate) t._private = true; else delete t._private;
+  saveLocal(); renderGrid();
+  toast(makePrivate ? '已标记为私密' : '已取消私密');
+  haptic();
+}
+function togglePrivateCountdown(id, makePrivate) {
+  const c = countdowns.find(x => x.id === id);
+  if (!c) return;
+  if (makePrivate) c._private = true; else delete c._private;
+  saveLocal(); renderCountdown();
+  toast(makePrivate ? '已标记为私密' : '已取消私密');
+  haptic();
+}
+
+// ── Long-press helper ──
+function bindLongPress(el, handler, ms = 500) {
+  let timer = null;
+  let startX = 0, startY = 0, moved = false;
+  const start = (e) => {
+    const t = e.touches ? e.touches[0] : e;
+    startX = t.clientX; startY = t.clientY; moved = false;
+    timer = setTimeout(() => {
+      if (!moved) {
+        if (navigator.vibrate) navigator.vibrate(15);
+        handler(e);
+      }
+    }, ms);
+  };
+  const move = (e) => {
+    const t = e.touches ? e.touches[0] : e;
+    if (Math.abs(t.clientX - startX) > 10 || Math.abs(t.clientY - startY) > 10) {
+      moved = true; clearTimeout(timer);
+    }
+  };
+  const cancel = () => { clearTimeout(timer); };
+  el.addEventListener('touchstart', start, { passive: true });
+  el.addEventListener('touchmove', move, { passive: true });
+  el.addEventListener('touchend', cancel);
+  el.addEventListener('touchcancel', cancel);
+  el.addEventListener('mousedown', start);
+  el.addEventListener('mousemove', move);
+  el.addEventListener('mouseup', cancel);
+  el.addEventListener('mouseleave', cancel);
+  el.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    handler(e);
+  });
+}
+
+// ── Context menu ──
+const CTX_ICONS = {
+  lock: '<svg viewBox="0 0 14 14" fill="none"><path d="M4 6V4.5a3 3 0 0 1 6 0V6M3 6h8v6H3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  unlock: '<svg viewBox="0 0 14 14" fill="none"><path d="M4 6V4.5a3 3 0 0 1 5.5-1.5M3 6h8v6H3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  trash: '<svg viewBox="0 0 14 14" fill="none"><path d="M3 4h8M5 4V3h4v1M5 4v7h4V4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/></svg>'
+};
+function openCtxMenu(ev, items) {
+  const menu = document.getElementById('ctxMenu');
+  const overlay = document.getElementById('ctxOverlay');
+  menu.innerHTML = items.map((it, i) => `
+    <button data-ctx-i="${i}" class="${it.danger ? 'danger' : ''}">
+      ${CTX_ICONS[it.icon] || ''}
+      <span>${escHtml(it.label)}</span>
+    </button>
+  `).join('');
+  // Position near the event point, clamped to viewport
+  const x = ev.touches ? ev.touches[0].clientX : (ev.clientX || window.innerWidth / 2);
+  const y = ev.touches ? ev.touches[0].clientY : (ev.clientY || window.innerHeight / 2);
+  // Show first to measure
+  overlay.style.display = 'block';
+  menu.classList.add('show');
+  const w = menu.offsetWidth, h = menu.offsetHeight;
+  let left = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+  let top = Math.max(8, Math.min(y, window.innerHeight - h - 8));
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+
+  const close = () => {
+    menu.classList.remove('show');
+    overlay.style.display = 'none';
+    menu.removeEventListener('click', onClick);
+    overlay.removeEventListener('click', close);
+  };
+  const onClick = (e) => {
+    const btn = e.target.closest('[data-ctx-i]');
+    if (!btn) return;
+    const i = parseInt(btn.dataset.ctxI);
+    close();
+    items[i] && items[i].action && items[i].action();
+  };
+  menu.addEventListener('click', onClick);
+  overlay.addEventListener('click', close);
 }
 
 // ── Grid ──
 function renderGrid() {
   const list = document.getElementById('taskList');
   const hint = document.getElementById('emptyHint');
+  const partnerList = document.getElementById('partnerTaskList');
+  const partnerTasks = (partnerData && partnerData.tasks) || [];
+
   if (tasks.length === 0) {
-    hint.style.display = 'block';
     list.innerHTML = '';
-    return;
-  }
-  hint.style.display = 'none';
-  const taskIds = new Set(tasks.map(t => t.id));
-  list.querySelectorAll('.task-card').forEach(el => { if (!taskIds.has(el.dataset.id)) el.remove(); });
-  tasks.forEach(task => {
-    let card = list.querySelector(`.task-card[data-id="${task.id}"]`);
-    const isNew = !card;
-    if (isNew) {
-      card = document.createElement('div');
-      card.className = 'task-card';
-      card.dataset.id = task.id;
-      list.appendChild(card);
-    }
-    const wasOpen = card.classList.contains('open');
-    const oldSubStates = {};
-    card.querySelectorAll('.subtask-item.open').forEach(el => { oldSubStates[el.dataset.subIdx] = true; });
-    card.innerHTML = buildCardHTML(task);
-    if (wasOpen || cardOpenState[task.id]) card.classList.add('open');
-    Object.keys(oldSubStates).forEach(idx => {
-      const subEl = card.querySelector(`.subtask-item[data-sub-idx="${idx}"]`);
-      if (subEl) subEl.classList.add('open');
+    hint.style.display = partnerTasks.length ? 'none' : 'block';
+  } else {
+    hint.style.display = 'none';
+    const taskIds = new Set(tasks.map(t => t.id));
+    list.querySelectorAll('.task-card').forEach(el => { if (!taskIds.has(el.dataset.id)) el.remove(); });
+    tasks.forEach(task => {
+      let card = list.querySelector(`.task-card[data-id="${task.id}"]`);
+      const isNew = !card;
+      if (isNew) {
+        card = document.createElement('div');
+        card.className = 'task-card';
+        card.dataset.id = task.id;
+        list.appendChild(card);
+      }
+      const wasOpen = card.classList.contains('open');
+      const oldSubStates = {};
+      card.querySelectorAll('.subtask-item.open').forEach(el => { oldSubStates[el.dataset.subIdx] = true; });
+      card.innerHTML = buildCardHTML(task);
+      if (task._private) card.classList.add('is-private'); else card.classList.remove('is-private');
+      if (wasOpen || cardOpenState[task.id]) card.classList.add('open');
+      Object.keys(oldSubStates).forEach(idx => {
+        const subEl = card.querySelector(`.subtask-item[data-sub-idx="${idx}"]`);
+        if (subEl) subEl.classList.add('open');
+      });
     });
-  });
+  }
   bindCardEvents();
+
+  // Partner read-only section
+  if (partnerTasks.length) {
+    partnerList.innerHTML = `
+      <div class="partner-section-head">
+        <span class="pt-avatar">${partnerInitial()}</span>
+        <span>${escHtml(partnerDisplayName())} 的任务</span>
+        <span class="ro-pill">只读</span>
+      </div>
+      <div id="partnerTaskInner"></div>`;
+    const inner = document.getElementById('partnerTaskInner');
+    partnerTasks.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'task-card ro-card';
+      card.dataset.partnerId = t.id;
+      card.innerHTML = buildCardHTML(t);
+      // Hide own delete/add-subtask/color row
+      card.querySelectorAll('.delete-task-btn, .add-subtask-btn, .task-color-row, .quick-chips, .subtask-actions').forEach(el => el.remove());
+      // Make cells & checks visually inert
+      card.querySelectorAll('.cell').forEach(c => c.style.cursor = 'default');
+      // Allow expand/collapse for viewing
+      const header = card.querySelector('[data-task-toggle]');
+      if (header) {
+        header.removeAttribute('data-task-toggle');
+        header.addEventListener('click', () => card.classList.toggle('open'));
+      }
+      card.querySelectorAll('[data-sub-toggle]').forEach(h => {
+        h.removeAttribute('data-sub-toggle');
+        h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
+      });
+      inner.appendChild(card);
+    });
+  } else {
+    partnerList.innerHTML = '';
+  }
 }
 
 function buildCardHTML(task) {
@@ -1911,7 +2706,7 @@ function buildCardHTML(task) {
     <div class="task-header" data-task-toggle="${task.id}">
       <div class="task-color-bar" style="background:${taskColor(task)}"></div>
       <div class="task-info">
-        <div class="task-name">${escHtml(task.name)}</div>
+        <div class="task-name">${escHtml(task.name)}${task._private ? ' <span class="private-mark" title="私密"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5M2.5 5.5h7v5h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>' : ''}</div>
         <div class="task-meta">
           <span class="count">${totalDone}</span><span class="sep">/ ${TARGET}</span>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%;background:${taskColor(task)}"></div></div>
@@ -1946,6 +2741,18 @@ function bindCardEvents() {
       const card = el.closest('.task-card');
       cardOpenState[id] = !cardOpenState[id];
       card.classList.toggle('open', cardOpenState[id]);
+    });
+    // Long-press own task header → private toggle / delete
+    bindLongPress(el, (ev) => {
+      const id = el.dataset.taskToggle;
+      const t = tasks.find(x => x.id === id);
+      if (!t) return;
+      openCtxMenu(ev, [
+        t._private
+          ? { label: '取消私密', icon: 'unlock', action: () => togglePrivateTask(id, false) }
+          : { label: '标记为私密', icon: 'lock', action: () => togglePrivateTask(id, true) },
+        { label: '删除任务', icon: 'trash', danger: true, action: () => deleteTask(id) }
+      ]);
     });
   });
   document.querySelectorAll('[data-sub-toggle]').forEach(el => {
@@ -2320,12 +3127,16 @@ function renderCarryForward() {
   `;
   container.insertBefore(node, container.firstChild);
   document.getElementById('carryBringBtn').addEventListener('click', () => {
+    // Dismiss BEFORE re-render so the card doesn't reappear (and protect against double-clicks)
+    carryDismissedKey = todayKey;
+    node.remove();
     if (!calendarTasks[todayKey]) calendarTasks[todayKey] = [];
+    const count = yPlans.length;
     yPlans.forEach(p => {
       calendarTasks[todayKey].push({ id: Date.now().toString() + Math.random().toString(36).slice(2,5), name: p.name, done: false });
     });
     saveLocal(); renderCalendar(); renderCalendarTasks();
-    toast(`已带过 ${yPlans.length} 条`);
+    toast(`已带过 ${count} 条`);
     haptic();
   });
   document.getElementById('carryDismissBtn').addEventListener('click', () => {
@@ -2572,6 +3383,21 @@ function bindEvents() {
     userMenu.classList.remove('show');
   });
 
+  document.getElementById('pairSettingsBtn').addEventListener('click', () => {
+    userMenu.classList.remove('show');
+    openPairSettings();
+  });
+
+  // Pair modal events
+  document.getElementById('pairModalClose').addEventListener('click', closePairSettings);
+  document.getElementById('pairModalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closePairSettings();
+  });
+  document.getElementById('pairSendBtn').addEventListener('click', sendPairInvite);
+  document.getElementById('pairSearchInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendPairInvite();
+  });
+
   document.getElementById('logoutBtn').addEventListener('click', e => {
     e.preventDefault();
     e.stopPropagation();
@@ -2617,35 +3443,71 @@ function saveCountdowns() {
 function renderCountdown() {
   const container = document.getElementById('countdownList');
   if (!container) return;
-  if (countdowns.length === 0) {
+  const partnerCountdowns = (partnerData && partnerData.countdowns) || [];
+
+  if (countdowns.length === 0 && !partnerCountdowns.length) {
     container.innerHTML = `<div class="countdown-empty">还没有倒计时<br><span style="font-size:12px;margin-top:6px;display:inline-block;opacity:0.7;">点击「添加」创建第一个</span></div>`;
     return;
   }
   const today = new Date();
   today.setHours(0,0,0,0);
-  const sorted = countdowns.slice().sort((a,b) => {
-    const da = new Date(a.date + 'T00:00:00');
-    const db = new Date(b.date + 'T00:00:00');
-    return da - db;
-  });
-  container.innerHTML = sorted.map(cd => {
+  const renderCard = (cd, opts = {}) => {
     const target = new Date(cd.date + 'T00:00:00');
     const diff = Math.round((target - today) / 86400000);
     const statusClass = diff < 0 ? 'passed' : '';
     const statusText = diff > 0 ? `还有 ${diff} 天` : diff === 0 ? '就是今天！' : `已过 ${Math.abs(diff)} 天`;
     const dateFormatted = cd.date.replace(/-/g, '/');
-    return `<div class="countdown-card">
+    const priv = cd._private ? `<span class="private-mark" title="私密"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5M2.5 5.5h7v5h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>` : '';
+    const tag = opts.partner ? `<span class="partner-tag" style="position:absolute;top:8px;right:8px;"><span class="pt-avatar">${partnerInitial()}</span>${escHtml(partnerDisplayName())}</span>` : '';
+    const cls = opts.partner ? 'countdown-card ro-card' : 'countdown-card';
+    const dataLp = opts.partner ? '' : `data-lp-cd="${cd.id}"`;
+    const delBtn = opts.partner ? '' : `<button class="countdown-delete" data-id="${cd.id}" aria-label="删除">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>`;
+    return `<div class="${cls}" ${dataLp} style="position:relative;">
       <div class="countdown-days">${Math.abs(diff)}<span class="unit">天</span></div>
       <div class="countdown-info">
-        <div class="countdown-name">${escapeHtml(cd.name)}</div>
+        <div class="countdown-name">${escapeHtml(cd.name)} ${priv}</div>
         <div class="countdown-date">${dateFormatted}</div>
         <div class="countdown-status ${statusClass}">${statusText}</div>
       </div>
-      <button class="countdown-delete" data-id="${cd.id}" aria-label="删除">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
+      ${delBtn}${tag}
     </div>`;
-  }).join('');
+  };
+
+  const sorted = countdowns.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+  let html = sorted.map(cd => renderCard(cd)).join('');
+
+  if (partnerCountdowns.length) {
+    const sortedP = partnerCountdowns.slice().sort((a,b) => new Date(a.date) - new Date(b.date));
+    html += `<div class="partner-section-head">
+      <span class="pt-avatar">${partnerInitial()}</span>
+      <span>${escHtml(partnerDisplayName())} 的倒计时</span>
+      <span class="ro-pill">只读</span>
+    </div>`;
+    html += sortedP.map(cd => renderCard(cd, { partner: true })).join('');
+  }
+  container.innerHTML = html;
+
+  // Long-press own countdown → private toggle / delete
+  container.querySelectorAll('[data-lp-cd]').forEach(el => {
+    bindLongPress(el, (ev) => {
+      const id = el.dataset.lpCd;
+      const c = countdowns.find(x => x.id === id);
+      if (!c) return;
+      openCtxMenu(ev, [
+        c._private
+          ? { label: '取消私密', icon: 'unlock', action: () => togglePrivateCountdown(id, false) }
+          : { label: '标记为私密', icon: 'lock', action: () => togglePrivateCountdown(id, true) },
+        { label: '删除倒计时', icon: 'trash', danger: true, action: () => {
+            if (!confirm('删除这个倒计时?')) return;
+            countdowns = countdowns.filter(x => x.id !== id);
+            saveCountdowns(); renderCountdown(); haptic();
+          }
+        }
+      ]);
+    });
+  });
 }
 
 function escapeHtml(str) {
