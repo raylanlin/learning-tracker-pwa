@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>Type Scale</title>
+<link rel="stylesheet" href="_base.css" />
+<style>
+  .stack {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .line {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .line:last-child { border-bottom: none; padding-bottom: 0; }
+  .size {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--fg2);
+  }
+  .sample { color: var(--fg1); }
+  .role {
+    font-size: 11px;
+    color: var(--fg2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="card-root">
+  <div class="stack">
+    <div class="line">
+      <span class="size">28 / 800</span>
+      <span class="sample" style="font-size:28px; font-weight:800;">学习追踪</span>
+      <span class="role">Display</span>
+    </div>
+    <div class="line">
+      <span class="size">22 / 700</span>
+      <span class="sample" style="font-size:22px; font-weight:700;">今日计划</span>
+      <span class="role">H1 / Header</span>
+    </div>
+    <div class="line">
+      <span class="size">18 / 700</span>
+      <span class="sample" style="font-size:18px; font-weight:700;">2025年4月</span>
+      <span class="role">H2 / Section</span>
+    </div>
+    <div class="line">
+      <span class="size">17 / 600</span>
+      <span class="sample" style="font-size:17px; font-weight:600;">阅读英文原版</span>
+      <span class="role">Task Title</span>
+    </div>
+    <div class="line">
+      <span class="size">15 / 600</span>
+      <span class="sample" style="font-size:15px; font-weight:600;">第二章笔记</span>
+      <span class="role">Subtask / Body</span>
+    </div>
+    <div class="line">
+      <span class="size">14 / 600</span>
+      <span class="sample" style="font-size:14px; font-weight:600;">确认</span>
+      <span class="role">Button</span>
+    </div>
+    <div class="line">
+      <span class="size">13 / 500</span>
+      <span class="sample" style="font-size:13px; font-weight:500; color:var(--fg2);">4月18日 周五</span>
+      <span class="role">Meta / Date</span>
+    </div>
+    <div class="line">
+      <span class="size">12 / 600</span>
+      <span class="sample" style="font-size:12px; font-weight:600; color:var(--fg2);">已完成 12 / 30</span>
+      <span class="role">Caption</span>
+    </div>
+    <div class="line">
+      <span class="size">11 / 600</span>
+      <span class="sample" style="font-size:11px; font-weight:600; color:var(--fg2);">未完成 · 已完成 · 今日</span>
+      <span class="role">Micro / Legend</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
