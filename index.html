@@ -423,12 +423,6 @@
     .hm-cell.l4 { background: var(--green); }
     .hm-cell.future { background: transparent; border: 1px dashed var(--border); }
     .hm-cell.today-mark { box-shadow: 0 0 0 1.5px var(--accent); }
-    .hm-cell.heart {
-      background: #ff4d6d;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; line-height: 1; color: #fff;
-    }
-    .hm-cell.heart:hover { transform: scale(1.4); }
     .heatmap-foot {
       display: flex; justify-content: space-between; align-items: center;
       margin-top: 10px; font-size: 10px; color: var(--text-tertiary);
@@ -2972,21 +2966,6 @@ function renderStats() {
 
   // 13-week heatmap (91 days) ending today
   const weeks = 13;
-  // Easter-egg: 7x7 heart pattern, centered in 14-col heatmap (col offset = 3).
-  // Each entry `${row}|${col}` is a cell to light up as ❤ regardless of session data.
-  const HEART_CELLS = (() => {
-    const s = new Set();
-    const O = 3; // col offset
-    const add = (r, c) => s.add(`${r}|${c + O}`);
-    add(0,0); add(0,6);
-    add(1,0); add(1,1); add(1,5); add(1,6);
-    add(2,0); add(2,1); add(2,2); add(2,4); add(2,5); add(2,6);
-    add(3,0); add(3,1); add(3,2); add(3,3); add(3,4); add(3,5); add(3,6);
-    add(4,1); add(4,2); add(4,3); add(4,4); add(4,5);
-    add(5,2); add(5,3); add(5,4);
-    add(6,3);
-    return s;
-  })();
   const days = weeks * 7;
   const end = new Date(todayKey + 'T00:00:00');
   // align so last column is current week, bottom row is today's weekday
@@ -3035,14 +3014,12 @@ function renderStats() {
       const lvl = level(n);
       const isFuture = d > end;
       const isToday = k === todayKey;
-      const isHeart = HEART_CELLS.has(`${row}|${col}`);
       let cls = 'hm-cell';
-      if (isHeart) cls += ' heart';
-      else if (isFuture) cls += ' future';
+      if (isFuture) cls += ' future';
       else if (lvl) cls += ' l' + lvl;
       if (isToday) cls += ' today-mark';
-      const title = isFuture ? k : `${k} · ${n} 次${isHeart ? ' · ❤' : ''}`;
-      rowHtml += `<div class="${cls}" title="${title}">${isHeart ? '❤' : ''}</div>`;
+      const title = isFuture ? k : `${k} · ${n} 次`;
+      rowHtml += `<div class="${cls}" title="${title}"></div>`;
     }
     rowsHtml.push(rowHtml);
   }
