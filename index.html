@@ -64,6 +64,8 @@
       --red: #e5564b;
       --red-soft: #fde9e7;
       --orange: #ef8a3d;
+      --pink: #ff6b9d;
+      --pink-soft: #ffe1ec;
 
       /* grid cell neutral */
       --cell-pending: #e5e5ea;
@@ -112,6 +114,8 @@
       --purple-soft: #2a1c3a;
       --red: #ef685c;
       --red-soft: #3a1a17;
+      --pink: #ff7eb0;
+      --pink-soft: #3a1f2a;
 
       --cell-pending: #26262c;
 
@@ -778,6 +782,7 @@
       background: var(--green);
       position: absolute; bottom: 5px;
     }
+    .cal-day .dot.pending { background: var(--pink); }
     .cal-day.today .dot { background: var(--accent); }
     .cal-day.selected .dot { background: #fff; }
 
@@ -2314,21 +2319,26 @@ function renderCalendar() {
     if (dateStr === todayKey) div.classList.add('today');
     if (dateStr === selectedDate) div.classList.add('selected');
     const hasSessions = sessions[dateStr] && sessions[dateStr].length > 0;
-    const hasCalTasks = calendarTasks[dateStr] && calendarTasks[dateStr].some(ct => ct.done);
+    const hasCalTasks = calendarTasks[dateStr] && calendarTasks[dateStr].length > 0;
+    const myAllDone = hasCalTasks && calendarTasks[dateStr].every(ct => ct.done);
     // Partner activity (accepted pair only) — empty ring next to my dot
     const pHasSessions = partnerData && partnerData.sessions && partnerData.sessions[dateStr] && partnerData.sessions[dateStr].length > 0;
-    const pHasCalTasks = partnerData && partnerData.calendarTasks && partnerData.calendarTasks[dateStr] && partnerData.calendarTasks[dateStr].some(ct => ct.done);
+    const pHasCalTasks = partnerData && partnerData.calendarTasks && partnerData.calendarTasks[dateStr] && partnerData.calendarTasks[dateStr].length > 0;
+    const pAllDone = pHasCalTasks && partnerData.calendarTasks[dateStr].every(ct => ct.done);
     if (hasSessions || hasCalTasks || pHasSessions || pHasCalTasks) {
       const dots = document.createElement('div');
       dots.className = 'dots';
       if (hasSessions || hasCalTasks) {
         const dot = document.createElement('div');
         dot.className = 'dot';
+        // 有未完成任务 → 粉红；全完成/只有 session → 绿色（保持）
+        if (hasCalTasks && !myAllDone) dot.classList.add('pending');
         dots.appendChild(dot);
       }
       if (pHasSessions || pHasCalTasks) {
         const dot = document.createElement('div');
         dot.className = 'dot partner';
+        if (pHasCalTasks && !pAllDone) dot.classList.add('pending');
         dot.title = partnerDisplayName();
         dots.appendChild(dot);
       }
