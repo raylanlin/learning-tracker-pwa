@@ -1561,12 +1561,14 @@
 // ============================================================
 
 // ── Supabase ──
-// Backend API (self-hosted on Aliyun)
-const API_BASE = 'http://47.250.40.117:5000';
+const SUPABASE_URL = 'https://wpwlbulloksrspbpclmt.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_fXJKvM-vxOvXb-yFntMXdw_JU0DCjKJ';
+const API = SUPABASE_URL + '/rest/v1';
+const AUTH = SUPABASE_URL + '/auth/v1';
 
 const USER_ACCOUNTS = {
-  'raylan': { name: 'Raylan' },
-  'scarlett': { name: 'Scarlett' },
+  'raylan': { email: 'raylan@learningtracker.app', name: 'Raylan' },
+  'scarlett': { email: 'scarlett@learningtracker.app', name: 'Scarlett' },
 };
 
 const STORAGE_KEY = 'learning_tracker_v5';
@@ -1622,44 +1624,46 @@ try {
 } catch { /* ignore */ }
 
 // ── API ──
-async function apiLogin(username, password) {
-  const res = await fetch(API_BASE + '/api/login', {
+async function apiLogin(email, password) {
+  const res = await fetch(AUTH + '/token?grant_type=password', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
+    headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON },
+    body: JSON.stringify({ email, password })
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Login failed');
-  }
+  if (!res.ok) throw new Error('Login failed');
   return await res.json();
 }
 
 async function apiLoadData(userId) {
-  const url = API_BASE + '/api/data?user_id=' + encodeURIComponent(userId);
+  const url = API + '/learning_tracker_data?user_id=eq.' + userId + '&limit=1';
   const res = await fetch(url, {
-    headers: { Authorization: 'Bearer ' + sessionToken }
+    headers: { apikey: SUPABASE_ANON, Authorization: 'Bearer ' + sessionToken }
   });
-  console.log('[apiLoadData] status:', res.status);
+  console.log('[apiLoadData] status:', res.status, 'url:', url);
   if (!res.ok) {
     const text = await res.text();
     console.error('[apiLoadData] error:', text);
-    throw new Error('Load failed: ' + res.status);
+    throw new Error('Load failed: ' + res.status + ' ' + text);
   }
-  return await res.json();
+  const data = await res.json();
+  console.log('[apiLoadData] rows:', data.length);
+  return data[0] || null;
 }
 
 async function apiSaveData(userId, payload) {
-  const res = await fetch(API_BASE + '/api/data', {
+  const res = await fetch(API + '/learning_tracker_data', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + sessionToken
+      apikey: SUPABASE_ANON,
+      Authorization: 'Bearer ' + sessionToken,
+      Prefer: 'resolution=merge-duplicates'
     },
     body: JSON.stringify({ user_id: userId, ...payload })
   });
   if (!res.ok) throw new Error('Save failed: ' + (await res.text()));
-  return await res.json().catch(() => ({}));
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
 }
 
 // ============================================================
@@ -1676,7 +1680,7 @@ let partnerPollTimer = null;
 
 function commonHeaders() {
   return {
-    'Content-Type': 'application/json',
+    apikey: SUPABASE_ANON,
     Authorization: 'Bearer ' + sessionToken
   };
 }
@@ -1684,7 +1688,7 @@ function commonHeaders() {
 // Profile API
 async function apiUpsertMyProfile(username, displayName) {
   // Idempotent upsert — uses PK (user_id)
-  const res = await fetch(API_BASE + '/api/' + '/learning_tracker_profiles?on_conflict=user_id', {
+  const res = await fetch(API + '/learning_tracker_profiles?on_conflict=user_id', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1702,7 +1706,7 @@ async function apiUpsertMyProfile(username, displayName) {
 }
 
 async function apiFindProfileByUsername(username) {
-  const url = API_BASE + '/api/' + '/learning_tracker_profiles?username=eq.' + encodeURIComponent(username) + '&limit=1';
+  const url = API + '/learning_tracker_profiles?username=eq.' + encodeURIComponent(username) + '&limit=1';
   const res = await fetch(url, { headers: commonHeaders() });
   if (!res.ok) return null;
   const data = await res.json();
@@ -1710,7 +1714,7 @@ async function apiFindProfileByUsername(username) {
 }
 
 async function apiGetProfile(userId) {
-  const url = API_BASE + '/api/' + '/learning_tracker_profiles?user_id=eq.' + userId + '&limit=1';
+  const url = API + '/learning_tracker_profiles?user_id=eq.' + userId + '&limit=1';
   const res = await fetch(url, { headers: commonHeaders() });
   if (!res.ok) return null;
   const data = await res.json();
@@ -1719,7 +1723,7 @@ async function apiGetProfile(userId) {
 
 // Pair API
 async function apiLoadPairs() {
-  const url = API_BASE + '/api/' + '/learning_tracker_pairs?or=(requester_id.eq.' + user.id + ',partner_id.eq.' + user.id + ')&order=created_at.desc';
+  const url = API + '/learning_tracker_pairs?or=(requester_id.eq.' + user.id + ',partner_id.eq.' + user.id + ')&order=created_at.desc';
   const res = await fetch(url, { headers: commonHeaders() });
   if (!res.ok) {
     console.warn('[pairs] load failed:', await res.text());
@@ -1736,7 +1740,7 @@ async function apiCreatePair(partnerProfile) {
     partner_username: partnerProfile.username,
     status: 'pending'
   };
-  const res = await fetch(API_BASE + '/api/' + '/learning_tracker_pairs', {
+  const res = await fetch(API + '/learning_tracker_pairs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1753,7 +1757,7 @@ async function apiCreatePair(partnerProfile) {
 }
 
 async function apiUpdatePair(id, status) {
-  const res = await fetch(API_BASE + '/api/' + '/learning_tracker_pairs?id=eq.' + id, {
+  const res = await fetch(API + '/learning_tracker_pairs?id=eq.' + id, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -1767,7 +1771,7 @@ async function apiUpdatePair(id, status) {
 }
 
 async function apiDeletePair(id) {
-  const res = await fetch(API_BASE + '/api/' + '/learning_tracker_pairs?id=eq.' + id, {
+  const res = await fetch(API + '/learning_tracker_pairs?id=eq.' + id, {
     method: 'DELETE',
     headers: commonHeaders()
   });
@@ -1776,7 +1780,7 @@ async function apiDeletePair(id) {
 
 // Partner data: reuses apiLoadData (same table, RLS allows when accepted)
 async function apiLoadPartnerData(partnerId) {
-  const url = API_BASE + '/api/' + '/learning_tracker_data?user_id=eq.' + partnerId + '&limit=1';
+  const url = API + '/learning_tracker_data?user_id=eq.' + partnerId + '&limit=1';
   const res = await fetch(url, { headers: commonHeaders() });
   if (!res.ok) {
     console.warn('[partner data] load failed:', await res.text());
@@ -2076,23 +2080,21 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
   btn.querySelector('.label').textContent = '登录中';
 
   try {
-    const data = await apiLogin(username, password);
-    sessionToken = data.token;
-    // Construct user object compatible with existing code
-    const userObj = { id: data.user_id, email: username + '@learningtracker.app', name: account.name };
-    sessionUser = userObj;
-    user = userObj;
+    const data = await apiLogin(account.email, password);
+    sessionToken = data.access_token;
+    sessionUser = data.user;
+    user = data.user;
     localStorage.setItem('lt_session', JSON.stringify({
-      access_token: data.token,
-      user: userObj,
-      expires_at: Date.now() + 86400000 // 24h
+      access_token: data.access_token,
+      user: data.user,
+      expires_at: Date.now() + data.expires_in * 1000
     }));
     showApp();
     loadFromLocal();
     initApp();
     loadFromCloud();
   } catch (e) {
-    setAuthError(e.message === 'Login failed' ? '密码错误,请重试' : (e.message || '登录失败'));
+    setAuthError('密码错误,请重试');
     setInputInvalid('authPass', true);
     btn.classList.remove('loading');
     btn.disabled = false;
