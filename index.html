@@ -2085,15 +2085,29 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
     localStorage.setItem('lt_session', JSON.stringify({
       access_token: data.token,
       user: userObj,
-      expires_at: Date.now() + 86400000 // 24h
+      expires_at: Date.now() + 86400000
     }));
     showApp();
     loadFromLocal();
     initApp();
     loadFromCloud();
   } catch (e) {
-    setAuthError(e.message === 'Login failed' ? '密码错误,请重试' : (e.message || '登录失败'));
-    setInputInvalid('authPass', true);
+    // Network failure? Try offline with cached data.
+    if (loadFromLocal()) {
+      setAuthError('');
+      showApp();
+      initApp();
+      setSyncStatus('offline', '离线模式');
+      // Cache a local-only session so next launch skips login
+      localStorage.setItem('lt_session', JSON.stringify({
+        access_token: 'offline',
+        user: { id: username, email: username + '@local', name: account.name },
+        expires_at: Date.now() + 86400000
+      }));
+    } else {
+      setAuthError(e.message === 'Login failed' ? '密码错误,请重试' : (e.message || '登录失败'));
+      setInputInvalid('authPass', true);
+    }
     btn.classList.remove('loading');
     btn.disabled = false;
     btn.querySelector('.label').textContent = '登录';
