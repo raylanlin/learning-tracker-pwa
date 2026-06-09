@@ -75,26 +75,26 @@
   --fs-11: 11px;  --fs-12: 12px;  --fs-13: 13px;  --fs-14: 14px;  --fs-15: 15px;
   --fs-16: 16px;  --fs-17: 17px;  --fs-18: 18px;  --fs-22: 22px;  --fs-28: 28px;
 
-  --fw-regular:  400;
-  --fw-medium:   500;
-  --fw-semibold: 600;
-  --fw-bold:     700;
-  --fw-black:    800;
+  --fw-regular:  400;  /* @kind font */
+  --fw-medium:   500;  /* @kind font */
+  --fw-semibold: 600;  /* @kind font */
+  --fw-bold:     700;  /* @kind font */
+  --fw-black:    800;  /* @kind font */
 
-  --lh-tight:  1.1;
-  --lh-snug:   1.25;
-  --lh-normal: 1.4;
+  --lh-tight:  1.1;   /* @kind font */
+  --lh-snug:   1.25;  /* @kind font */
+  --lh-normal: 1.4;   /* @kind font */
 
   /* ── Motion ── */
-  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);      /* standard decelerate */
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);   /* modal entry only */
-  --t-fast: 0.15s;
-  --t-med:  0.2s;
-  --t-slow: 0.32s;
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);      /* @kind other */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);   /* @kind other */
+  --t-fast: 0.15s;  /* @kind other */
+  --t-med:  0.2s;   /* @kind other */
+  --t-slow: 0.32s;  /* @kind other */
 
   /* ── Layout ── */
-  --content-max: 560px;     /* phone-centric max content width (was 520 in v4) */
-  --tap-min:     44px;      /* iOS HIG minimum hit target */
+  --content-max: 560px;  /* @kind spacing */
+  --tap-min:     44px;   /* @kind spacing */
 
   /* ── Legacy aliases (for older preview cards and UI kits) ── */
   /* v4 names mapped to their v5 equivalents so old files keep working. */
@@ -112,7 +112,7 @@
   --radius-xl:   var(--r-xl);
   --radius-2xl:  24px;
   --radius-pill: var(--r-pill);
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);  /* @kind other */
   --dur-fast: var(--t-fast);
   --dur-base: var(--t-med);
   --dur-slow: var(--t-slow);
