@@ -1817,6 +1817,8 @@ async function refreshSharing({ silent = false } = {}) {
     if (document.getElementById('pairModalOverlay').classList.contains('show')) {
       renderPairSettings();
     }
+    // Cache for offline use
+    savePartnerToLocal();
   } catch (e) {
     if (!silent) console.error('[sharing] refresh failed:', e);
   }
@@ -2095,6 +2097,7 @@ document.getElementById('authLoginBtn').addEventListener('click', async () => {
     // Network failure? Try offline with cached data.
     if (loadFromLocal()) {
       setAuthError('');
+      loadPartnerFromLocal();
       showApp();
       initApp();
       setSyncStatus('offline', '离线模式');
@@ -2143,6 +2146,27 @@ function loadFromLocal() {
     }
   } catch { /* ignore */ }
   return false;
+}
+
+// Read cached partner state (offline fallback for the sharing tab).
+// Synced by refreshSharing() on every successful cloud load.
+function loadPartnerFromLocal() {
+  try {
+    const raw = localStorage.getItem('lt_partner');
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    acceptedPair = p.acceptedPair || null;
+    partnerProfile = p.partnerProfile || null;
+    partnerData = p.partnerData || null;
+  } catch { /* ignore */ }
+}
+
+function savePartnerToLocal() {
+  try {
+    localStorage.setItem('lt_partner', JSON.stringify({
+      acceptedPair, partnerProfile, partnerData
+    }));
+  } catch { /* ignore */ }
 }
 
 // Fetch cloud state in the background. If successful, overwrite in-memory
