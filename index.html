@@ -1318,6 +1318,101 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* ── Week Ring (P1) ──────────────────────────────────── */
+    .week-ring-bar {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 14px 16px 14px 12px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 12px; box-shadow: var(--shadow-sm);
+    }
+    .week-ring-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+    .week-ring-wrap svg { transform: rotate(-90deg); }
+    .week-ring-bg { fill: none; stroke: var(--bg-elev); stroke-width: 7; }
+    .week-ring-fg { fill: none; stroke-width: 7; stroke-linecap: round;
+      stroke-dasharray: 163; stroke-dashoffset: 163;
+      transition: stroke-dashoffset 0.9s cubic-bezier(0.2,0.8,0.3,1); }
+    .week-ring-center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; pointer-events: none;
+    }
+    .week-ring-center .wr-pct { font-size: 14px; font-weight: 900; color: var(--accent); line-height: 1; }
+    .week-ring-center .wr-unit { font-size: 9px; color: var(--text-tertiary); margin-top: 1px; }
+    .week-ring-info { flex: 1; min-width: 0; }
+    .week-ring-info .wr-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+    .week-ring-info .wr-sub { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+    .week-ring-info .wr-remaining { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+    .week-ring-edit {
+      background: var(--bg-elev); border: none; border-radius: var(--r-pill);
+      padding: 5px 11px; font-size: 11px; font-weight: 600; color: var(--text-secondary);
+      cursor: pointer; white-space: nowrap; font-family: inherit;
+      transition: background var(--t-fast) var(--ease-out);
+    }
+    .week-ring-edit:hover { background: var(--border-strong); color: var(--text-primary); }
+
+    /* ── Health badge (P9) ─────────────────────────────── */
+    .health-sleeping {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 10px; font-weight: 600; color: var(--text-tertiary);
+      background: var(--bg-elev); border-radius: var(--r-pill);
+      padding: 2px 7px; margin-left: 6px; vertical-align: middle;
+      cursor: default;
+    }
+    .task-card.sleeping .task-color-bar { opacity: 0.4; }
+
+    /* ── Rhythm chart (P6) ─────────────────────────────── */
+    .rhythm-wrap { margin-top: 4px; }
+    .rhythm-bars { display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px; align-items: end; height: 52px; }
+    .rhythm-bar { background: var(--accent); border-radius: 3px 3px 1px 1px; min-height: 3px; opacity: 0.75; }
+    .rhythm-bar.peak { background: var(--yellow); opacity: 1; }
+    .rhythm-xlabels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-tertiary); margin-top: 5px; }
+    .rhythm-insight { font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+    .rhythm-insight b { color: var(--text-primary); font-weight: 700; }
+    .rhythm-empty { font-size: 12px; color: var(--text-tertiary); padding: 12px 0 4px; }
+
+    /* ── Undo toast (P20) ─────────────────────────────── */
+    .undo-toast {
+      position: fixed; bottom: 90px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--text-primary); color: var(--bg);
+      border-radius: var(--r-pill); padding: 10px 16px;
+      display: flex; align-items: center; gap: 14px;
+      font-size: 13px; font-weight: 500; z-index: 450;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+      white-space: nowrap; box-shadow: var(--shadow-lg);
+    }
+    .undo-toast.show { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+    .undo-toast-btn {
+      border: none; background: transparent; color: var(--accent);
+      font-size: 13px; font-weight: 800; cursor: pointer; padding: 0; font-family: inherit;
+    }
+    .undo-toast-btn:hover { text-decoration: underline; }
+
+    /* ── Onboarding (P19) ─────────────────────────────── */
+    .onboard-card {
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 12%, var(--card)) 0%,
+        color-mix(in srgb, var(--purple) 8%, var(--card)) 100%);
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+      border-radius: var(--r-xl); padding: 22px 18px 18px; margin-bottom: 14px;
+    }
+    .onboard-card h3 { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
+    .onboard-card .ob-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; text-wrap: pretty; }
+    .onboard-steps-list { display: flex; flex-direction: column; gap: 8px; }
+    .onboard-step-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card); border-radius: var(--r-md); padding: 10px 14px;
+    }
+    .onboard-step-item .os-num {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .onboard-step-item .os-text { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .onboard-step-item .os-hint { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+
   </style>
 </head>
 <body>
@@ -1449,6 +1544,7 @@
       <div id="dayDetail"></div>
     </div>
     <div class="tab-page" id="gridPage">
+      <div id="weekRingBar"></div>
       <div id="taskList"></div>
       <div id="partnerTaskList"></div>
       <div class="empty-hint" id="emptyHint" style="display:none;">
@@ -1557,6 +1653,10 @@
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
+  <div class="undo-toast" id="undoToast">
+    <span id="undoMsg">已删除</span>
+    <button class="undo-toast-btn" id="undoBtn">撤销</button>
+  </div>
 </div>
 
 <script>
@@ -1612,6 +1712,10 @@ let currentModalTaskId = '';
 let cardOpenState = {};
 let syncDebounceTimer = null;
 let _lastCheckedDate = '';  // 独立日期追踪，避免依赖 tasks[0]._lastDate
+let weekGoal = parseInt(localStorage.getItem('lt_week_goal') || '60');
+// Undo system
+let _undoPending = null; // { label, restoreFn }
+let _undoTimer = null;
 
 // Restore session
 try {
@@ -2236,6 +2340,24 @@ function debouncedCloudSave() {
   syncDebounceTimer = setTimeout(() => saveToCloud(), 1500);
 }
 
+// ── Undo toast (P20) ──
+function showUndoToast(label, restoreFn) {
+  _undoPending = { restoreFn };
+  if (_undoTimer) clearTimeout(_undoTimer);
+  const el = document.getElementById('undoToast');
+  document.getElementById('undoMsg').textContent = label;
+  el.classList.add('show');
+  _undoTimer = setTimeout(() => {
+    el.classList.remove('show');
+    _undoPending = null;
+  }, 5000);
+}
+function hideUndoToast() {
+  if (_undoTimer) clearTimeout(_undoTimer);
+  document.getElementById('undoToast').classList.remove('show');
+  _undoPending = null;
+}
+
 function saveLocal() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ tasks, sessions, calendar_tasks: calendarTasks, countdowns }));
@@ -2260,6 +2382,14 @@ function initApp() {
   renderStats();
   bindEvents();
   setInterval(checkDayChange, 60000);
+  // Wire undo button
+  document.getElementById('undoBtn')?.addEventListener('click', () => {
+    if (_undoPending) {
+      const fn = _undoPending.restoreFn;
+      hideUndoToast();
+      fn();
+    }
+  });
 
   // scroll shadow on header
   window.addEventListener('scroll', () => {
@@ -2619,6 +2749,75 @@ function openCtxMenu(ev, items) {
   overlay.addEventListener('click', close);
 }
 
+
+// ── Week Ring (P1) ──────────────────────────────────────
+function computeWeekProgress() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); // 0=Sun
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - dayOfWeek);
+  weekStart.setHours(0, 0, 0, 0);
+  let count = 0;
+  for (let d = 0; d < 7; d++) {
+    const day = new Date(weekStart);
+    day.setDate(weekStart.getDate() + d);
+    const key = fmtKey(day);
+    count += (sessions[key] || []).length;
+  }
+  const daysLeft = 6 - dayOfWeek;
+  return { count, daysLeft, weekStart };
+}
+
+function renderWeekRing() {
+  const bar = document.getElementById('weekRingBar');
+  if (!bar || tasks.length === 0) { if(bar) bar.innerHTML = ''; return; }
+  const { count, daysLeft } = computeWeekProgress();
+  const pct = Math.min(count / weekGoal, 1);
+  const circumference = 163;
+  const offset = circumference - pct * circumference;
+  const remaining = Math.max(0, weekGoal - count);
+  const pctDisplay = Math.round(pct * 100);
+  // color: green when done, accent otherwise
+  const ringColor = pct >= 1 ? 'var(--green)' : 'var(--accent)';
+  const subText = pct >= 1
+    ? '✓ 本周目标已达成！'
+    : `${count} / ${weekGoal} 格 · 剩 ${daysLeft} 天`;
+  const hintText = pct >= 1
+    ? ''
+    : remaining <= 0 ? '' : `日均 ${daysLeft > 0 ? Math.ceil(remaining / daysLeft) : remaining} 格可达标`;
+
+  bar.innerHTML = `
+    <div class="week-ring-bar">
+      <div class="week-ring-wrap">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle class="week-ring-bg" cx="30" cy="30" r="26"></circle>
+          <circle class="week-ring-fg" cx="30" cy="30" r="26"
+            style="stroke:${ringColor}; stroke-dashoffset:${offset.toFixed(1)}"></circle>
+        </svg>
+        <div class="week-ring-center">
+          <span class="wr-pct" style="color:${ringColor}">${pctDisplay}%</span>
+          <span class="wr-unit">本周</span>
+        </div>
+      </div>
+      <div class="week-ring-info">
+        <div class="wr-title">本周目标</div>
+        <div class="wr-sub">${subText}</div>
+        ${hintText ? `<div class="wr-remaining">${hintText}</div>` : ''}
+      </div>
+      <button class="week-ring-edit" id="weekGoalEditBtn" title="修改目标">${weekGoal} 格</button>
+    </div>`;
+
+  document.getElementById('weekGoalEditBtn')?.addEventListener('click', () => {
+    const v = parseInt(prompt(`当前周目标：${weekGoal} 格\n请输入新目标（10–500）：`) || '');
+    if (v >= 10 && v <= 500) {
+      weekGoal = v;
+      localStorage.setItem('lt_week_goal', String(v));
+      renderWeekRing();
+      toast(`周目标已更新为 ${v} 格`);
+    }
+  });
+}
+
 // ── Grid ──
 function renderGrid() {
   const list = document.getElementById('taskList');
@@ -2628,9 +2827,41 @@ function renderGrid() {
 
   if (tasks.length === 0) {
     list.innerHTML = '';
-    hint.style.display = partnerTasks.length ? 'none' : 'block';
+    hint.style.display = 'none';
+    // P19: onboarding card for new users
+    let obCard = document.getElementById('onboardCard');
+    if (!partnerTasks.length) {
+      if (!obCard) {
+        obCard = document.createElement('div');
+        obCard.id = 'onboardCard';
+        obCard.className = 'onboard-card';
+        obCard.innerHTML = `
+          <h3>欢迎使用学习追踪器 👋</h3>
+          <p class="ob-sub">三步开始你的第一个学习任务</p>
+          <div class="onboard-steps-list">
+            <div class="onboard-step-item">
+              <div class="os-num">1</div>
+              <div><div class="os-text">点击底部「添加任务」</div><div class="os-hint">比如「英语阅读」「高数刷题」</div></div>
+            </div>
+            <div class="onboard-step-item">
+              <div class="os-num">2</div>
+              <div><div class="os-text">展开任务，添加子任务</div><div class="os-hint">比如「精读文章」「真题练习」</div></div>
+            </div>
+            <div class="onboard-step-item">
+              <div class="os-num">3</div>
+              <div><div class="os-text">点格子，打第一卡！</div><div class="os-hint">每格代表一次学习，目标 30 格</div></div>
+            </div>
+          </div>`;
+        list.insertBefore(obCard, list.firstChild);
+      }
+    } else {
+      if (obCard) obCard.remove();
+    }
   } else {
     hint.style.display = 'none';
+    // Remove onboarding once user has tasks
+    const obEl = document.getElementById('onboardCard');
+    if (obEl) obEl.remove();
     const taskIds = new Set(tasks.map(t => t.id));
     list.querySelectorAll('.task-card').forEach(el => { if (!taskIds.has(el.dataset.id)) el.remove(); });
     tasks.forEach(task => {
@@ -2654,6 +2885,7 @@ function renderGrid() {
       });
     });
   }
+  renderWeekRing();
   bindCardEvents();
 
   // Partner read-only section
@@ -2751,6 +2983,22 @@ function buildCardHTML(task) {
   if (totalToday > 0) metaTags.push(`<span class="tag today">●${totalToday} 今日</span>`);
   if (totalBonus > 0) metaTags.push(`<span class="tag bonus">+${totalBonus} 超额</span>`);
 
+  // P9: health badge — check last 7 days of sessions for this task
+  let sleepingDays = -1;
+  const hasDoneCells = subtasks.some(st => st.cells.some(c => c.done));
+  if (hasDoneCells) {
+    const todayD = new Date(todayKey + 'T00:00:00');
+    let found = false;
+    for (let i = 0; i <= 7; i++) {
+      const d = new Date(todayD); d.setDate(todayD.getDate() - i);
+      const k = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      if ((sessions[k] || []).some(s => s.task === task.id)) { found = true; break; }
+    }
+    if (!found) sleepingDays = 8;
+  }
+  const sleepTag = sleepingDays >= 8
+    ? `<span class="health-sleeping" title="超过 7 天没有打卡">💤 沉睡中</span>` : '';
+
   const legendHTML = `
     <div class="legend-strip">
       <span class="legend-item"><span class="legend-dot" style="background:var(--cell-pending)"></span>未完成</span>
@@ -2764,7 +3012,7 @@ function buildCardHTML(task) {
     <div class="task-header" data-task-toggle="${task.id}">
       <div class="task-color-bar" style="background:${taskColor(task)}"></div>
       <div class="task-info">
-        <div class="task-name">${escHtml(task.name)}${task._private ? ' <span class="private-mark" title="私密"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5M2.5 5.5h7v5h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>' : ''}</div>
+        <div class="task-name">${escHtml(task.name)}${task._private ? ' <span class="private-mark" title="私密"><svg viewBox="0 0 12 12" fill="none"><path d="M3.5 5.5V4a2.5 2.5 0 0 1 5 0v1.5M2.5 5.5h7v5h-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>' : ''}${sleepTag}</div>
         <div class="task-meta">
           <span class="count">${totalDone}</span><span class="sep">/ ${TARGET}</span>
           <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%;background:${taskColor(task)}"></div></div>
@@ -2883,13 +3131,13 @@ function bindCardEvents() {
       const parts = el.dataset.delSub.split('-');
       const subIdxStr = parts.pop();
       const taskIdd = parts.join('-');
-      if (confirm('确定删除这个子任务?')) deleteSubtask(taskIdd, parseInt(subIdxStr));
+      deleteSubtask(taskIdd, parseInt(subIdxStr));
     });
   });
   document.querySelectorAll('[data-del-task]').forEach(el => {
     el.addEventListener('click', e => {
       e.stopPropagation();
-      if (confirm('确定删除这个任务?')) deleteTask(el.dataset.delTask);
+      deleteTask(el.dataset.delTask);
     });
   });
   document.querySelectorAll('[data-pick-color]').forEach(el => {
@@ -2919,12 +3167,19 @@ function addProgress(taskId, subIdx, persist = true, silent = false) {
       sessions[todayKey].push({ t: Date.now(), task: taskId, sub: subIdx });
       const nowDone = prevDone + 1;
       if (!silent) {
-        if (nowDone === TARGET) {
-          celebrate(taskColor(task));
-          toast(`🎉 「${task.name} · ${sub.name}」达成 30`);
-        } else if (nowDone === TARGET + 30) {
+        if (nowDone === TARGET + 30) {
           celebrate('#a668e0');
           toast(`💜 双倍达成！60 / 60`);
+        } else if (nowDone === TARGET) {
+          celebrate(taskColor(task));
+          toast(`🎉 「${task.name} · ${sub.name}」达成 30`);
+        } else if (nowDone === Math.ceil(TARGET / 2)) {
+          toast(`🔥 「${sub.name}」过半了，继续冲！`);
+        } else if (nowDone === 1 && prevDone === 0) {
+          toast(`✨ 「${sub.name}」开始打卡！`);
+        } else if (!silent && Math.random() < 0.06) {
+          const quips = ['📚 认真的样子很帅', '⚡ 今天状态不错', '🌊 保持节奏', '🎯 专注即是天赋', '🚀 继续！'];
+          toast(quips[Math.floor(Math.random() * quips.length)]);
         }
       }
       break;
@@ -2935,8 +3190,9 @@ function addProgress(taskId, subIdx, persist = true, silent = false) {
   }
 }
 
-// Confetti celebration
+// Confetti celebration (P17: respect prefers-reduced-motion)
 function celebrate(tint) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const root = document.createElement('div');
   root.className = 'confetti-root';
   const colors = [tint || '#4a7dff', '#3ec177', '#f5b740', '#a668e0', '#ef8a3d'];
@@ -2973,6 +3229,43 @@ function undoLastYellow(taskId, subIdx) {
 }
 
 // ── Stats ──
+
+// ── Rhythm chart (P6) ────────────────────────────────────
+function buildRhythmHTML() {
+  const hourCounts = new Array(24).fill(0);
+  let totalSess = 0;
+  Object.values(sessions || {}).forEach(day => {
+    (day || []).forEach(s => {
+      if (s && s.t) {
+        const h = new Date(s.t).getHours();
+        hourCounts[h]++;
+        totalSess++;
+      }
+    });
+  });
+  if (totalSess < 5) return ''; // not enough data
+  const maxH = Math.max(...hourCounts);
+  const peakHour = hourCounts.indexOf(maxH);
+  const peakCount = hourCounts[peakHour];
+  const totalForPeak = hourCounts.reduce((a,b) => a+b, 0);
+  const peakPct = totalForPeak > 0 ? Math.round((peakCount / totalForPeak) * 100) : 0;
+  const peakLabel = peakHour < 6 ? '深夜' : peakHour < 12 ? '上午' : peakHour < 18 ? '下午' : '晚间';
+  const barsHtml = hourCounts.map((v, i) => {
+    const h = maxH > 0 ? Math.max(4, Math.round((v / maxH) * 100)) : 4;
+    const isPeak = v === maxH && v > 0;
+    return `<div class="rhythm-bar${isPeak ? ' peak' : ''}" style="height:${h}%" title="${i}时 · ${v}次"></div>`;
+  }).join('');
+  return `
+    <div class="stats-section">
+      <h3>学习节律 <span class="sub">打卡时间分布</span></h3>
+      <div class="rhythm-wrap">
+        <div class="rhythm-bars">${barsHtml}</div>
+        <div class="rhythm-xlabels"><span>0时</span><span>6时</span><span>12时</span><span>18时</span><span>24时</span></div>
+        <div class="rhythm-insight">你的高产时段是 <b>${peakLabel} ${peakHour}–${peakHour+1} 时</b>，占全部打卡的 <b>${peakPct}%</b>。</div>
+      </div>
+    </div>`;
+}
+
 function computeStats() {
   // per-day session counts (use both tracked sessions and fallback: just counts of doneToday across saves)
   // streak: consecutive days with >=1 activity ending today or yesterday
@@ -3176,6 +3469,7 @@ function renderStats() {
       <h3>里程碑 <span class="sub">累计 ${totalCells}</span></h3>
       <div class="milestone-strip">${msHTML}</div>
     </div>
+    ${buildRhythmHTML()}
   `;
 }
 
@@ -3275,15 +3569,31 @@ function addSubtask(taskId, name) {
   toast('已添加子任务');
 }
 function deleteTask(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  const snapshot = JSON.parse(JSON.stringify(tasks));
+  const snapState = JSON.parse(JSON.stringify(cardOpenState));
   tasks = tasks.filter(t => t.id !== id);
   delete cardOpenState[id];
   saveLocal(); renderGrid();
+  showUndoToast(`已删除「${task.name}」`, () => {
+    tasks = snapshot;
+    cardOpenState = snapState;
+    saveLocal(); renderGrid();
+    toast('已恢复');
+  });
 }
 function deleteSubtask(taskId, subIdx) {
   const task = tasks.find(t => t.id === taskId);
   if (!task || !task.subtasks[subIdx]) return;
+  const subName = task.subtasks[subIdx].name;
+  const subSnapshot = JSON.parse(JSON.stringify(task.subtasks));
   task.subtasks.splice(subIdx, 1);
   saveLocal(); renderGrid();
+  showUndoToast(`已删除子任务「${subName}」`, () => {
+    const t = tasks.find(x => x.id === taskId);
+    if (t) { t.subtasks = subSnapshot; saveLocal(); renderGrid(); toast('已恢复'); }
+  });
 }
 
 function checkDayChange() {
@@ -3306,13 +3616,16 @@ function checkDayChange() {
 
 // ── Modals ──
 function openTaskModal() {
+  _modalFocusTrigger = document.activeElement;
   currentModalMode = 'add-task';
   document.getElementById('modalTitle').textContent = '新建任务';
   document.getElementById('modalContent').innerHTML = `<input type="text" id="modalInput" placeholder="任务名称,例如:英语阅读" maxlength="30" autocomplete="off" />`;
   document.getElementById('modalOverlay').classList.add('show');
+  _trapFocus('modalOverlay');
   setTimeout(() => { const inp = document.getElementById('modalInput'); if (inp) inp.focus(); }, 220);
 }
 function openSubtaskModal(taskId) {
+  _modalFocusTrigger = document.activeElement;
   currentModalMode = 'add-subtask';
   currentModalTaskId = taskId;
   document.getElementById('modalTitle').textContent = '添加子任务';
@@ -3320,7 +3633,27 @@ function openSubtaskModal(taskId) {
   document.getElementById('modalOverlay').classList.add('show');
   setTimeout(() => { const inp = document.getElementById('modalInput'); if (inp) inp.focus(); }, 220);
 }
-function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+let _modalFocusTrigger = null;
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  if (_modalFocusTrigger) { try { _modalFocusTrigger.focus(); } catch(e){} _modalFocusTrigger = null; }
+}
+function _trapFocus(overlayId) {
+  const overlay = document.getElementById(overlayId);
+  if (!overlay) return;
+  // Delay so modal is fully visible before trapping
+  setTimeout(() => {
+    const focusables = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    const first = focusables[0], last = focusables[focusables.length - 1];
+    overlay._trapHandler = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+      else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+    };
+    overlay.addEventListener('keydown', overlay._trapHandler);
+  }, 50);
+}
 function handleModalConfirm() {
   const input = document.getElementById('modalInput');
   if (!input) return;
